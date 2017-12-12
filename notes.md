@@ -32,6 +32,13 @@ If you are trying to solve a generic problem, chances are that someone has alrea
 A module is a unit of functionality. 
 We can harness the functionality of modules in our code by using the **require** function. 
 **require** enables us to load in modules. This allows us to take existing functionality provided by Node developers, third party libraries or ourselves and load it into our file and develop products faster.
+### Using our own module
+Inside of all our node files, we have access to a variable called **module**. The **module** property has an object called **exports**. Everything inside of **module.exports** gets exported. This includes methods, variables etc.
 
+When we run the code:
+```javascript
+ const pdf = require("pdfMake");
+```
+...it means that the `pdf` object is set to the exports object of the `pdfMake` module.
 
 
