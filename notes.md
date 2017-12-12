@@ -26,3 +26,12 @@ Node.js is single-threaded but it is still very fast because it is non-blocking 
 ## Package ecosystem - npm
 **npm** is the largest library of open source software in the world. The availability of packages allows developers to focus more on their particular application's logic rather than on the infrastructure around it.
 If you are trying to solve a generic problem, chances are that someone has already provided a package for it so always check npmjs.com first.
+
+## Node fundamentals
+### Modules
+A module is a unit of functionality. 
+We can harness the functionality of modules in our code by using the **require** function. 
+**require** enables us to load in modules. This allows us to take existing functionality provided by Node developers, third party libraries or ourselves and load it into our file and develop products faster.
+
+
+
