@@ -41,4 +41,30 @@ When we run the code:
 ```
 ...it means that the `pdf` object is set to the exports object of the `pdfMake` module.
 
+We export functions and variables in our module by attaching them to the module.exports object as shown:
+```javascript
+//exporting a variable
+module.exports.age = 30;
+
+//exporting a function
+module.exports.add = (a, b)=>{
+    console.log(`adding ${a} and ${b}`);
+    return a+b;
+};
+```
+### Using third-party modules
+1. Initialize npm inside your project by running `npm init`
+2. Answer some questions including
+    - application name
+    - version
+    - description (optional)
+    - entry point of application eg app.js
+    - test command (optional)
+    - git repository (optional)
+    - keywords - useful for when people are searching for your module. If you are not publishing this is not required
+    - author
+    - license(can be left as ISC, since we are not publishing)
+    
+All in all, the command `npm init` is not doing anything special behind the scenes. It is creating a single file in the root of your project called **package.json**.
+This file will contain meta information about your project and also specifies all its dependencies.
 
