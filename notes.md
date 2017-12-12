@@ -20,3 +20,9 @@ We can shut down the current node process being executed by running the command/
 Here 0 is to specify that everything ran fine without an error. It is a common specification between languages.
 `process.exit(0)` returns us to our usual terminal. We can also do CTRL-C twice to exit from the node process.
 
+## Non-blocking IO
+Node.js is single-threaded but it is still very fast because it is non-blocking meaning that other operations still continue even whilst others are waiting for a result.
+
+## Package ecosystem - npm
+**npm** is the largest library of open source software in the world. The availability of packages allows developers to focus more on their particular application's logic rather than on the infrastructure around it.
+If you are trying to solve a generic problem, chances are that someone has already provided a package for it so always check npmjs.com first.
