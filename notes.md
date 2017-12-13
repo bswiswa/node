@@ -126,3 +126,24 @@ yargs.argv { _: [ 'remove' ], title: 'batsi', '$0': 'app.js' }
 ```
 Notice that yarn was able to parse the `--title = "batsi` and store them appropriately. 
 
+### Working with JSON
+JSON stands for JavaScript Object Notation and it is a way of representing an object as a string. JSON is popular because it is a string of text and so it can be easily read or parsed and used to recreate an object.
+#### Creating JSON
+You can create a JSON representation of a value by using the **JSON.stringify()** function.
+```javascript
+var obj = {
+    name: "Batsi"
+};
+
+var stringObj = JSON.stringify(obj);
+//value stored in stringObj is a string and no longer an object
+
+console.log(typeof stringObj); //string
+
+console.log(stringObj); //{"name":"Batsi"}
+```
+Thus JSON.stringify() returns a JSON string. This string looks similar to the object but with some key differences:
+1. JSON attribute names are wrapped in double quotes - hence `name:` is now `"name":`. This is a universal requirement for JSON syntax
+2. strings will be wrapped in double quotes as opposed to single quotes
+
+
