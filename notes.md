@@ -161,3 +161,32 @@ console.log(person);        // { name: 'Batsi', age: 25 }
 ```
 We can see that person is an object from the return of the typeof operator but also because of the way the object looks internally - notice how the keys are no longer wrapped in double quotes, like `"name":` as before and also that the values are wrapped in single quotes like `'Batsi'`. Single quotes on strings is valid in JavaScript but not valid in JSON.
 
+#### Writing JSON to a file and reading back
+We can write JSON to a file which has to have the **.json** extension
+```javascript
+//require file system module
+const fs = require("fs");
+
+//create our object
+let originalNote = {
+    title: "Some title",
+    body: "some body"
+};
+
+//JSONify
+let originalNoteString = JSON.stringify(originalNote);
+//write to file. Note that file has to have .json extension
+fs.writeFileSync("notes.json", originalNoteString);
+
+//read object from file and print a property to verify
+let noteString = fs.readFileSync("notes.json");
+let note = JSON.parse(noteString);
+
+console.log(`title: ${note.title}, body: ${note.body}`);
+// title: Some title, body: some body
+```
+Note that the created file **notes.json**'s contents will look like this:
+```
+{"title":"Some title","body":"some body"}
+```
+
