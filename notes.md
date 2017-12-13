@@ -67,4 +67,25 @@ module.exports.add = (a, b)=>{
     
 All in all, the command `npm init` is not doing anything special behind the scenes. It is creating a single file in the root of your project called **package.json**.
 This file will contain meta information about your project and also specifies all its dependencies.
+3. Find the package name on npmjs.com
+4. `npm install package_name --save`
+Here a folder called **node_modules** is created and inside of it, the package and all its code will be there.
+The **package.json** file is also updated to include the name and version of the installed package. This is in the **dependencies** property.
+5. require the module and use it
 
+lodash is an example of a package packed with utility functions that you do not need to rewrite.
+### Sharing your code
+When uploading code to github be sure to exclude the **node_modules** folder. You can do this by adding a line in your **.gitignore** file:
+```
+node_modules/
+```
+If you have multiple subdirectories with their own node_modules/ folders, you still only have to include the above line in the .gitignore file in the application root folder.
+
+Also do not make any changes to the code inside the modules themselves because this will get overwritten anyway anytime you update your dependencies or install any new modules that depend on them.
+
+When distributing your code you do not have to include the **node_modules** folder because, whenever we install a package, our **package.json** file contains information about the package name and it version. 
+
+If you get code without the **node_modules** folder, you can run the command `npm install` and it will install all the packages and their dependencies with their correct versions to your project.
+
+### Order of loading
+It is also important to know the order of operations when packages are being included in your project -- your project is first searched for a package and if it is not found there, it is then installed.
