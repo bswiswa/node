@@ -135,15 +135,29 @@ var obj = {
     name: "Batsi"
 };
 
-var stringObj = JSON.stringify(obj);
-//value stored in stringObj is a string and no longer an object
+var str = JSON.stringify(obj);
+//value stored in str is a string and no longer an object
 
-console.log(typeof stringObj); //string
+console.log(typeof str); //string
 
-console.log(stringObj); //{"name":"Batsi"}
+console.log(str); //{"name":"Batsi"}
 ```
 Thus JSON.stringify() returns a JSON string. This string looks similar to the object but with some key differences:
 1. JSON attribute names are wrapped in double quotes - hence `name:` is now `"name":`. This is a universal requirement for JSON syntax
-2. strings will be wrapped in double quotes as opposed to single quotes
+2. strings will be wrapped in double quotes as opposed to single quotes. Numbers will stay the same eg
+```
+{"name":"Batsi", "age": 30 }
+```
+#### Reading values and objects from JSON
+Use **JSON.parse()** to get back an object from JSON
+```javascript
+// manually create JSON
+let personString = '{ "name": "Batsi", "age": 25}';
+// use JSON.parse() to get an object back from JSON
+let person = JSON.parse(personString); //
 
+console.log(typeof person); // object
+console.log(person);        // { name: 'Batsi', age: 25 }
+```
+We can see that person is an object from the return of the typeof operator but also because of the way the object looks internally - notice how the keys are no longer wrapped in double quotes, like `"name":` as before and also that the values are wrapped in single quotes like `'Batsi'`. Single quotes on strings is valid in JavaScript but not valid in JSON.
 
