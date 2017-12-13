@@ -89,3 +89,13 @@ If you get code without the **node_modules** folder, you can run the command `np
 
 ### Order of loading
 It is also important to know the order of operations when packages are being included in your project -- your project is first searched for a package and if it is not found there, it is then installed.
+
+### nodemon
+If you do not want to keep rerunning the `node app.js` command to restart the application, you can do a global install of the **nodemon** package from npm.
+```
+npm install nodemon -g
+```
+Once installed you can run your application as you would with the `node app.js` command but this time instead of using `node` you use `nodemon` as in `nodemon app.js`.
+Once you are set up this way, anytime you make an update to your application and save it, it will be refreshed and rerun so you can see the results of your changes immedeately.
+Note that nodemon is only used for development processes. When you deploy to a real web server, you do not need nodemon.
+
