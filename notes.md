@@ -70,7 +70,8 @@ This file will contain meta information about your project and also specifies al
 3. Find the package name on npmjs.com
 4. `npm install package_name --save`
 Here a folder called **node_modules** is created and inside of it, the package and all its code will be there.
-The **package.json** file is also updated to include the name and version of the installed package. This is in the **dependencies** property.
+If we include the `--save` flage, the **package.json** file is also updated to include the name and version of the installed package. This is in the **dependencies** property.
+
 5. require the module and use it
 
 lodash is an example of a package packed with utility functions that you do not need to rewrite.
@@ -85,7 +86,7 @@ Also do not make any changes to the code inside the modules themselves because t
 
 When distributing your code you do not have to include the **node_modules** folder because, whenever we install a package, our **package.json** file contains information about the package name and it version. 
 
-If you get code without the **node_modules** folder, you can run the command `npm install` and it will install all the packages and their dependencies with their correct versions to your project.
+If you get code without the **node_modules** folder, you can run the command `npm install` and it will install all the packages and their dependencies with their correct versions to your project. This is assuming that the **package.json** file is specifies all packages needed (non of them were installed without using the `--save` flag. If a package is installed without using the `--save` flag, it is installed but the package.json file is not updated and so someone running `npm install` to get all packages in your package.json file will be missing that one)
 
 ### Order of loading
 It is also important to know the order of operations when packages are being included in your project -- your project is first searched for a package and if it is not found there, it is then installed.
@@ -98,4 +99,30 @@ npm install nodemon -g
 Once installed you can run your application as you would with the `node app.js` command but this time instead of using `node` you use `nodemon` as in `nodemon app.js`.
 Once you are set up this way, anytime you make an update to your application and save it, it will be refreshed and rerun so you can see the results of your changes immedeately.
 Note that nodemon is only used for development processes. When you deploy to a real web server, you do not need nodemon.
+
+### User input
+We can run node apps and specify additional inputs on the command line. These additional arguments can be found on the process's argv (argument vector) property:
+```
+node app.js myArgument
+```
+Inside of the app we can access the "myArgument" argument by as follows:
+```
+console.log(process.argv[2]);
+//myArgument
+```
+Notice that we our command line argument is the third value in the argv array. The first two values correspond to the node executable that was run and the entry point used to run the process.
+
+You can install the **yargs** package to help with parsing  command line input.
+```javascript
+const argv = yargs.argv;
+console.log(argv);
+//{ _: [ 'remove' ], title: 'batsi', '$0': 'app.js' }
+```
+The _ property above is where commands will be stored eg "add", "remove".
+yargs is most useful when we need to pass in key-value pairs as it is able to parse the strings and organize them appropriately for you. Using yargs also frees us from having to hardcode the index of the command line variables in the process.argv array.
+```
+node app.js remove --title="batsi"
+yargs.argv { _: [ 'remove' ], title: 'batsi', '$0': 'app.js' }
+```
+Notice that yarn was able to parse the `--title = "batsi` and store them appropriately. 
 
