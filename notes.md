@@ -13,10 +13,16 @@ Run the `node` command to begin a node process. A node process will allow you to
 ## Execution context
 When JavaScript runs in the browser, the global execution context where everything is contained is the **window** object.
 In Node, we are independent of the browser so the global execution context is different. The global object in this case is not **window** but **global**.
+
 Inside of the browser, you have access to the **document** object, which refers to the DOM. The DOM contains nodes corresponding to every item displayed in the browser.
 Making changes to the **document** object is the way of manipulating the displayed content in the DOM and ultimately the browser.
+
 Inside of node, we do not have this HTML document but what we have that is similar is called a **process**. You can view it by running the command `process` from inside of node and it gives you a lot of information about the specific node process being executed.
-We can shut down the current node process being executed by running the command/function ```javascript    process.exit(0)    ```
+
+We can shut down the current node process being executed by running the command/function 
+```javascript
+process.exit(0)    
+```
 Here 0 is to specify that everything ran fine without an error. It is a common specification between languages.
 `process.exit(0)` returns us to our usual terminal. We can also do CTRL-C twice to exit from the node process.
 
@@ -25,13 +31,16 @@ Node.js is single-threaded but it is still very fast because it is non-blocking 
 
 ## Package ecosystem - npm
 **npm** is the largest library of open source software in the world. The availability of packages allows developers to focus more on their particular application's logic rather than on the infrastructure around it.
+
 If you are trying to solve a generic problem, chances are that someone has already provided a package for it so always check npmjs.com first.
 
 ## Node fundamentals
 ### Modules
 A module is a unit of functionality. 
 We can harness the functionality of modules in our code by using the **require** function. 
+
 **require** enables us to load in modules. This allows us to take existing functionality provided by Node developers, third party libraries or ourselves and load it into our file and develop products faster.
+
 ### Using our own module
 Inside of all our node files, we have access to a variable called **module**. The **module** property has an object called **exports**. Everything inside of **module.exports** gets exported. This includes methods, variables etc.
 
@@ -86,7 +95,9 @@ Also do not make any changes to the code inside the modules themselves because t
 
 When distributing your code you do not have to include the **node_modules** folder because, whenever we install a package, our **package.json** file contains information about the package name and it version. 
 
-If you get code without the **node_modules** folder, you can run the command `npm install` and it will install all the packages and their dependencies with their correct versions to your project. This is assuming that the **package.json** file is specifies all packages needed (non of them were installed without using the `--save` flag. If a package is installed without using the `--save` flag, it is installed but the package.json file is not updated and so someone running `npm install` to get all packages in your package.json file will be missing that one)
+If you get code without the **node_modules** folder, you can run the command `npm install` and it will install all the packages and their dependencies with their correct versions to your project. 
+
+This is assuming that the **package.json** file is specifies all packages needed (non of them were installed without using the `--save` flag. If a package is installed without using the `--save` flag, it is installed but the package.json file is not updated and so someone running `npm install` to get all packages in your package.json file will be missing that one)
 
 ### Order of loading
 It is also important to know the order of operations when packages are being included in your project -- your project is first searched for a package and if it is not found there, it is then installed.
@@ -124,7 +135,7 @@ yargs is most useful when we need to pass in key-value pairs as it is able to pa
 node app.js remove --title="batsi"
 yargs.argv { _: [ 'remove' ], title: 'batsi', '$0': 'app.js' }
 ```
-Notice that yarn was able to parse the `--title = "batsi` and store them appropriately. 
+Notice that yargs was able to parse the `--title = "batsi` and store them appropriately. 
 
 ### Working with JSON
 JSON stands for JavaScript Object Notation and it is a way of representing an object as a string. JSON is popular because it is a string of text and so it can be easily read or parsed and used to recreate an object.
