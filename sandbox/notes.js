@@ -2,21 +2,29 @@ console.log("Starting notes.js");
 
 const fs = require("fs");
 
+let fetchNotes = () => {
+        //not sure if notes-data.json file exists so try
+    try{
+        //get previous notes in our data file first
+      let notesString = fs.readFileSync("notes-data.json");
+      return JSON.parse(notesString);
+    }catch(e){
+        console.log("No previous notes loaded");
+        return [];
+    }
+};
+
+let saveNotes = (notes) => {
+   fs.writeFileSync("notes-data.json", JSON.stringify(notes));   
+}
+
 let addNote = (title, body) => {
-    let notes = [];
+    let notes = fetchNotes();
     var note = {
       title,
         body
     };
     
-    //not sure if notes-data.json file exists so try
-    try{
-        //get previous notes in our data file first
-      let notesString = fs.readFileSync("notes-data.json");
-      notes = JSON.parse(notesString);
-    }catch(e){
-        console.log("No previous notes loaded");
-    }
     /*filter takes a callback function which is called once for every item in the array. If the callback function returns true, that item is added to the output array, in this case duplicateNotes
     */
     let duplicateNotes = notes.filter(note => note.title === title);
@@ -26,9 +34,8 @@ let addNote = (title, body) => {
     if(duplicateNotes.length === 0){   
         //add new note
         notes.push(note);
-        fs.writeFileSync("notes-data.json", JSON.stringify(notes));
-    }else{
-        console.log(`Note not added. The title ${title} is a duplicate of an existing one`);
+        saveNotes(notes);
+        return note;
     }
 };
 
