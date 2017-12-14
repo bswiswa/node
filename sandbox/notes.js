@@ -40,20 +40,54 @@ let addNote = (title, body) => {
 };
 
 let getAll = () => {
-    console.log("getting all notes");   
+    let notes = fetchNotes();
+    notes.forEach(note => {
+        console.log(`Title: ${note.title} Body: ${note.body}`);
+    });
 };
 
 let read = (title) =>{
-    console.log("reading ", title);
+    let notes = fetchNotes();
+    for(let i = 0; i < notes.length; i++){
+        if(notes[i].title === title){
+          return notes[i];  
+        }
+            
+    }
 }
 
 let remove = (title) => {
-    console.log("removing ", title);
+    let notes = fetchNotes();
+    let initialCount = notes.length;
+    for(let i = 0; i < notes.length; i++){
+        if(notes[i].title == title){
+            notes.splice(i,1);
+            break;
+        }
+    }
+    let finalCount = notes.length;
+       
+    saveNotes(notes);
+    
+    if(finalCount != initialCount){
+        console.log("Note successfully removed");
+        console.log("---");
+        console.log(`Title: ${title}`);  
+    }else{
+        console.log("Nothing was removed");
+    }
+}
+
+let logNote = note => {
+    console.log("---");
+    console.log(`Title: ${note.title}`);
+    console.log(`Body: ${note.body}`);
 }
 //In ES6, if an object property's key is exactly equal to a variable name, we can just include the variable and not have to write the { keyName:keyName }notation but just { keyName }
 module.exports = {
     addNote, 
     getAll,
     read,
-    remove
+    remove,
+    logNote
 };

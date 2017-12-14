@@ -12,14 +12,13 @@ let command = argv._[0];
 console.log("process.argv", process.argv) ;
 console.log("yargs.argv", argv);
 
+
 if(command === "add"){
     console.log("adding new note...");
     let note = notes.addNote(argv.title, argv.body);
     if(note) {
         console.log("Note added successfully");
-        console.log("---");
-        console.log(`Title: ${note.title}`);
-        console.log(`Body: ${note.body}`);
+        notes.logNote(note);
     }
     else console.log("Note already exists, nothing added");
     
@@ -27,8 +26,12 @@ if(command === "add"){
     console.log("listing all notes...");
     notes.getAll();
 }else if(command === "read"){
-    console.log("reading note...");
-    notes.read(argv.title);
+    let note = notes.read(argv.title);
+    if(note){
+        console.log("Reading note...");
+        notes.logNote(note);
+    }else console.log("Note not found");
+    
 }else if(command === "remove"){
     console.log("removing note...")
     notes.remove(argv.title);
