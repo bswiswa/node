@@ -76,7 +76,9 @@ module.exports.add = (a, b)=>{
     
 All in all, the command `npm init` is not doing anything special behind the scenes. It is creating a single file in the root of your project called **package.json**.
 This file will contain meta information about your project and also specifies all its dependencies.
+
 3. Find the package name on npmjs.com
+
 4. `npm install package_name --save`
 Here a folder called **node_modules** is created and inside of it, the package and all its code will be there.
 If we include the `--save` flage, the **package.json** file is also updated to include the name and version of the installed package. This is in the **dependencies** property.
@@ -201,3 +203,88 @@ Note that the created file **notes.json**'s contents will look like this:
 {"title":"Some title","body":"some body"}
 ```
 
+## Node debugging
+### Command line debugging
+Use the **inspect** command for example, to debug *app.js*
+```
+node inspect app.js
+```
+This attaches the debugger to our application.
+
+When debugging we may want to go through the application line-by-line to figure out what is going on. So when you run debug mode, initially, the app will not have started at all.
+Instead the debugger will be paused on the first line.
+You can run the **list()** function which can take in a positive integer **n** and it will list the **n** lines above and below the place we are paused eg `list(10)`
+
+When you run the **list()** command at the top of our code with an integer specified, we will see our code wrapped inside a function:
+```javascript
+((function (exports, require, module, __filename, __dirname){
+...
+...our code..
+...
+
+});
+```
+This wrapper function is created by Node.js and all code we write is wrapped in it. 
+This function gives us access to **require, module, exports, __filename, __dirname**. For example, when we add things to module.export, module is defined here.
+
+To execute the next statement, we use the `n` (next) command.
+
+When we reach the end of the lines we can run the `c` (continue) command and all our lines will get excecuted until the program completes.
+
+You can shut down the debugger by entering `exit` or pressing CTRL-C twice.
+
+`n` and `c` are basic debugger commands. We can also stop and check on the values of variables at different points of execution.
+If you shutdown and restart the debugger.
+We can navigate through the lines with `n` and when we get to a place where we would like to see the values of items, we can use the `repl` command. `repl` stands for read-evaluate-print-loop. This is a place where we can manipulate values or just see them.
+The `repl` will put us in a different mode
+```
+debug> repl
+Press Ctrl + C to leave debug repl
+\>
+```
+In **repl** we can access any of our values and print them out.
+
+```
+\> person
+{ name: 'Batsi', age: 30 }
+\> person.age + 10
+40
+\> person.age
+30
+\> person.age += 10
+40
+\> person.age
+40
+```
+As shown above, when in **repl** we can even manipulate the data and change it with any JavaScript statement.
+You can exit **repl** and return to debug mode by pressing CTRL-C.
+
+If we do not want our debugger to scroll through each line one by one with `n`, we can use the `debugger` statement in our code. 
+The first break point in our code will be the first line but where the code goes next with `c` will be determined by the presence or absence of `debugger` statements.
+If none are present, then `c` will proceed to execute the entire program.
+If one or more are present, then `c` will execute and stop at the next `debugger` statements.
+
+```javascript
+let person = { name: "Batsi"};
+
+person.age = 30;
+
+debugger;
+
+person.name = "Shingi";
+
+console.log(person);
+```
+We can navigate to multiple `debugger` statements in our code with the `c` command. This is the usual way of debugging as it is faster than moving through each line with `n`.
+
+### debugger with nodemon
+Note that you can also run the debugger with **nodemon**.
+Instead of running:
+```
+node inspect app.js
+```
+You can run
+```
+nodemon inspect app.js
+```
+This open debug mode as usual, but also run **nodemon**. If we make changes to our application, **nodemon** will rerun and refresh the app as well as the debug console. Thus we avoid having to rerun the debugger each time we make a change.
