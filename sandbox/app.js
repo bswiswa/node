@@ -4,7 +4,41 @@ const yargs = require("yargs");
 
 const notes = require("./notes.js");
 
-const argv = yargs.argv;
+
+const titleOption = {
+                describe: "Title of note",
+                demand: true,
+                alias: "t"
+                    };
+
+const bodyOption = {
+                describe: "Body of note",
+                demand: true,
+                alias: "b"
+};
+
+const argv = yargs
+                .command("add", "Add a new note", {
+                    title: titleOption,
+                    body: bodyOption
+                })
+                .command("list", "List all notes")
+                .command("read", "Read a note", {
+                    title: titleOption
+                })
+                .command("remove", "Remove a note", {
+                    title: titleOption
+                })
+                .help()
+                .argv;
+
+/* the command() function takes in a command string, a user-friendly message and an options object. 
+The key in the options object is the property name and the value is another object which specifies how that property should work. It has the fields describe (string), demand (boolean variable of whether it is required or not), alias (short cut)
+
+ help() enables us to call the --help flag eg node app.js --help
+ 
+ */
+
 let command = argv._[0];
 
 if(command === "add"){
