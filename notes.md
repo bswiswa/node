@@ -288,3 +288,34 @@ You can run
 nodemon inspect app.js
 ```
 This open debug mode as usual, but also run **nodemon**. If we make changes to our application, **nodemon** will rerun and refresh the app as well as the debug console. Thus we avoid having to rerun the debugger each time we make a change.
+### Debugging with Chrome DevTools
+`node inspect` allowed us to inspect via the command line but when we want to inspect via the Chrome DevTools, we use `node` with a flag
+```
+node --inspect-brk app.js
+```
+This tells Node that we want to run app.js in **inspect** mode but we do not want to connect via the command line. We also want to break, just before the first line as usual.
+
+Next we open the Chrome browser and go to the url - **chrome://inspect**
+
+Click on **Open dedicated DevTools for Node**
+
+Here we will be on the **Sources** tab which will show a similar output to what we had in the console. In fact, we can toggle the console in the Developer Tools as well by hitting Esc.
+
+In DevTools we can navigate to the next breakpoint by clicking on the forward arrow. We can perform our variable inspections in the console.
+
+If we would like to add more break points, we can simply click on the line number for that.
+
+Note that we can also use nodemon with DevTools. This will refresh DevTools whenever we update our code.
+In order to run DevTools with nodemon we run the following command
+```
+nodemon --inspect-brk app.js
+```
+Which is again just a swap of node with nodemon
+
+Chrome DevTools is useful when you have browser access but if you are on a server, then the command-line debugger is your only way of debugging so it is good to know both.
+
+
+
+
+
+

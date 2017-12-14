@@ -4,6 +4,6 @@ person.age = 30;
 
 debugger;
 
-person.name = "Shingi";
+person.name = "Shingo";
 
 console.log(person);
