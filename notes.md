@@ -418,5 +418,57 @@ Inside of callback
 ```
 The second **setTimeout()** surprisingly executes after the last line. Why does our function with zero time out not execute immediately?
 
+### Behind the scenes
+--------------                 ------------------------
+| Call Stack |    ------->>    |     Node APIs        |
+--------------                  -----------------------
+        |^                                |
+Event   ||                                |
+Loop    v|                                v
+    
+------------------------------------------------------
+|              Callback Queue                        |
+------------------------------------------------------
+
+#### Call Stack
+The call stack is a data structure that keeps track of program execution inside of V8. 
+It keeps track of functions currently executing and the statements that have fired.
+It is a data structure that can do 2 things:
+1. You can add something on the top of it
+2. You can remove the top item. You have to remove the top item first before you can remove any other item inside it.
+
+When we begin executing our program, node runs the **main()** function. This **main()** function is the wrapper function that encloses all of our code when we run it with Node.js. 
+#### Explaining our code
+How are Call Stack, Node APIs, Callback Queue and Event loop involved in the execution of our code below?
+```javascript
+console.log("Starting app");
+
+setTimeout(() => console.log("Inside of callback"), 2000);
+
+setTimeout(() => console.log("Zero timeout"), 0);
+
+console.log("Finishing up");
+```
+- `main()` function is pushed into call stack and begins execution. It remains at the bottom of the stack whilst its statements execute
+- `console.log("Starting app");` is pushed into the call stack and executes, printing "Starting app" to the screen. It is popped off the stack after execution
+- setTimeout() is a Node API. It is not available inside of the V8 engine but rather it is something that Node gives us access to. 
+The first setTimeout is pushed onto the call stack
+When we call setTimeout() we register an event-callback. The event is the instruction to wait 2 seconds and the callback is the anonymous arrow function `() => console.log("Inside of callback")`
+When we call setTimeout, it gets registered in the Node APIs and starts execution of waiting 2 seconds. In the meantime, the setTimeout call is removed from the call stack. The call stack can only process on function at a time but we can have events waiting to get processed even when the call stack is executing.
+- the next statement that runs is the second setTimeout call. Here we register the setTimeout in the Node APIs section again where the previous setTimeout call currently resides, counting down its 2 seconds to execution. However, this second setTimeout call is registered with a 0 second timeout.
+Once registered in the Node APIs, this second setTimeout is popped off the call stack.
+- because the second setTimeout has a zero timeout, it finishes on the Node APIs but it doesn't get executed instantaneously. Rather, it is added into the back of the Callback Queue. This callback queue consists of all the callback functions that are ready to get fired.
+All functions in the callback queue wait for the call stack to be empty first before they can run. 
+When the call stack is empty, we can run the first function in the callback queue. If there is another function in the callback queue behind it, it will have to wait for that first function to finish executing first.
+- This is where the Event Loop comes in. The event loop takes a look at the call stack. If the call stack is not empty, the event loop does nothing since the call stack can only run one thing at a time. 
+In our example, main() is still executing on the call stack and so the event loop does nothing.
+- In the mean time, `console.log("Finishing up")` gets pushed onto the call stack and executed, printing "Finishing up" to the screen. It gets popped off the stack after finishing. 
+- The **main()** function then gets popped off the call stack and at this point the call stack is empty, and this state is detected by the event loop. The event loop checks if there is something in the callback queue and if so, it moves the first callback into the call stack and executing it.
+The first function that will run is the callback of the zero timeout setTimeout function since it is the first callback function in the callback queue. `() => console.log("Zero timeout")` will get executed in the call stack, printing "Zero timeout" to the console. 
+So in summary, `() => console.log("Zero timeout")` executes after `console.log("Finishing up")` because it is a callback function and has to wait until the main function completes execution and is removed from the call stack whereas the latter is a part of the main program and always executes before it.
+- After the callback finishes executing, it is popped off the stack and at this point there is nothing in the call stack and nothing in the callback queue BUT there is still something registered in the Node API and so the Node process is not finished yet.
+- 2 seconds later, the original setTimeout will fire and move its call back function into the callback queue. The event loop will check the call stack and see that it is empty then it will check the callback queue and see that there is something to run. So it will push the callback onto the call stack and start the process of executing it. Thus the `() => console.log("Inside of callback")` callback function is executed.
 
 
+
+  
