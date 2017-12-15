@@ -480,6 +480,126 @@ setTimeout(() => console.log("Inside of callback"), 2000);
 Here the event is the passing of 2 seconds and it triggers the firing of the callback function.
 The event could be anything like a database query finishing or an HTTP request coming back. In these cases, you will want a callback function to do something with that data.
 
+### Pretty printing
+The console does not print out nested objects well. Here is an object returned from a Google Geolocation API call and printed to the console:
+```
+{ results:
+   [ { address_components: [Array],
+       formatted_address: '4 Burr St, New Haven, CT 06512, USA',
+       geometry: [Object],
+       place_id: 'ChIJned6mw3Z54kRVQysVU3IVsI',
+       types: [Array] } ],
+  status: 'OK' }
+  ```
+Here we cannnot see the contents of the array value of `results.address_component` and `results.types` or the object value of `results["geometry"]`.
+In order to always get a full printout of objects and always be able to see nested fields, you can use the `JSON.stringify()` function
+
+JSON.stringify takes in the 
+1. object to be printed, 
+2. an object specifying the fields you want to filter (usually left as `undefined`), 
+3. lastly an integer specifying the number of spaces for indentation
+
+### HTTP Requests
+HTTP stands for the HyperText Transfer Protocol. In HTTP we make a request from a website, and the data that comes back is called the body of the request. 
+
+An HTTP request consists of an options object and a callback. 
+The options object specifies the url we are querying and has other information like the format we would like the data to be returned in. 
+The callback function handles the result of the request and takes 3 arguments - *error, response* and *body*
+
+An example request is shown below:
+```javascript
+//request(optionsObject, callback)
+request({
+    url: "https://maps.googleapis.com/maps/api/geocode/json?address=4%20Burr%20Street%20New%20Haven%20CT",
+    json: true
+}, (error, response, body)=>{
+    console.log(JSON.stringify(body, undefined, 2));
+});
+```
+The body of an HTTP request comes in many forms:
+Everytime you make a url request on the internet, the page that you have returned and rendered is the body of the request. In this case the body of the request is HTML.
+The body can also be JSON which is the case in a Google Geolocation API request.
+In summary, the body is the core data that comes back from the server.
+
+The **response** of an HTTP requests is an object that has information about the request success. It has a field called **statusCode** which tells how the request went.
+200 means OK
+404 means Page not Found
+500 means Server crashed
+additional **statusCode** values depend upon the implementation. 
+The **body** is also included in the **response** object (**response.body**) even though you can access **body** on its own.
+Below the **body** field of **response** there is a **headers** field which is part of the HTTP protocol and consist of key-value pairs. They can be sent in both the request and the response. Examples of headers are:
+```
+"headers": {
+    "content-type": "application/json; charset=UTF-8",
+    "date": "Fri, 15 Dec 2017 17:43:43 GMT",
+    "expires": "Sat, 16 Dec 2017 17:43:43 GMT",
+    "cache-control": "public, max-age=86400",
+    "access-control-allow-origin": "*",
+    "server": "mafe",
+    "x-xss-protection": "1; mode=block",
+    "x-frame-options": "SAMEORIGIN",
+    "alt-svc": "hq=\":443\"; ma=2592000; quic=51303431; quic=51303339; quic=51303338; quic=51303337; quic=51303335,quic=\":443\"; ma=2592000; v=\"41,39,38,37,35\"",
+    "accept-ranges": "none",
+    "vary": "Accept-Language,Accept-Encoding",
+    "connection": "close"
+  }
+```
+When you create your own API, you will need to be familiar with how the headers work.
+After the **headers** we have the **request** object which has information about the request that was made
+```
+  "request": {
+    "uri": {
+      "protocol": "https:",
+      "slashes": true,
+      "auth": null,
+      "host": "maps.googleapis.com",
+      "port": 443,
+      "hostname": "maps.googleapis.com",
+      "hash": null,
+      "search": "?address=4%20Burr%20Street%20New%20Haven%20CT",
+      "query": "address=4%20Burr%20Street%20New%20Haven%20CT",
+      "pathname": "/maps/api/geocode/json",
+      "path": "/maps/api/geocode/json?address=4%20Burr%20Street%20New%20Haven%20CT",
+      "href": "https://maps.googleapis.com/maps/api/geocode/json?address=4%20Burr%20Street%20New%20Haven%20CT"
+    }
+    ```
+eg protocol used, host, query
+
+After **request**, we also have our own custom **headers** eg
+```
+"headers": {
+      "accept": "application/json"
+    }
+```
+This was set when we in the creation of the request itself:
+```javascript
+request({
+    url: "https://maps.googleapis.com/maps/api/geocode/json?address=4%20Burr%20Street%20New%20Haven%20CT",
+    json: true
+}, (error, response, body)=>{
+    console.log(JSON.stringify(response, undefined, 2));
+});
+```
+...right at the line `json: true` which specified that we wanted our body to be returned as JSON.
+So in summary the **response** object stores information about the response and the request itself.
+### Errors on the HTTP request object
+The **statusCode** is very important for determining whether we should proceed with our code and it will be checked on whenever we are working with HTTP requests.
+If there are errors, the **statusCode** only detects that an error occurred on the server-side eg (crashing servers- 500, non-existent data - 404).
+There are also errors that can happen during the process of making the HTTP request, before it is even sent out eg spelling error on the domain or non-existent domain. In this case, there will be an error in the request object as we cannot even connect to a server. An error during the making of the request could happen if we do not have internet access. 
+An error due to a mispelt server (thus non-existent) could look like this:
+```
+{
+  "code": "ENOTFOUND",
+  "errno": "ENOTFOUND",
+  "syscall": "getaddrinfo",
+  "hostname": "maps.gmoogleapis.com",
+  "host": "maps.gmoogleapis.com",
+  "port": 443
+}
+```
+The most important field here is the **code**
+
+If we make a successful call to a server the **statusCode** of the response is 200 and the **error** is `null`
 
 
 
