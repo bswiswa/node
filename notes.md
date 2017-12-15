@@ -470,5 +470,14 @@ So in summary, `() => console.log("Zero timeout")` executes after `console.log("
 - 2 seconds later, the original setTimeout will fire and move its call back function into the callback queue. The event loop will check the call stack and see that it is empty then it will check the callback queue and see that there is something to run. So it will push the callback onto the call stack and start the process of executing it. Thus the `() => console.log("Inside of callback")` callback function is executed.
 
 
+### Callback function
+Is a function that is passed as an argument to another function and is executed after a certain event has happened. For example:
+```javascript
+setTimeout(() => console.log("Inside of callback"), 2000);
+```
+Here the event is the passing of 2 seconds and it triggers the firing of the callback function.
+The event could be anything like a database query finishing or an HTTP request coming back. In these cases, you will want a callback function to do something with that data.
 
-  
+
+
+
