@@ -507,6 +507,7 @@ The options object specifies the url we are querying and has other information l
 The callback function handles the result of the request and takes 3 arguments - *error, response* and *body*
 
 An example request is shown below:
+
 ```javascript
 //request(optionsObject, callback)
 request({
@@ -528,6 +529,7 @@ The **response** of an HTTP requests is an object that has information about the
 additional **statusCode** values depend upon the implementation. 
 The **body** is also included in the **response** object (**response.body**) even though you can access **body** on its own.
 Below the **body** field of **response** there is a **headers** field which is part of the HTTP protocol and consist of key-value pairs. They can be sent in both the request and the response. Examples of headers are:
+
 ```
 "headers": {
     "content-type": "application/json; charset=UTF-8",
@@ -546,6 +548,7 @@ Below the **body** field of **response** there is a **headers** field which is p
 ```
 When you create your own API, you will need to be familiar with how the headers work.
 After the **headers** we have the **request** object which has information about the request that was made
+
 ```
   "request": {
     "uri": {
@@ -562,16 +565,18 @@ After the **headers** we have the **request** object which has information about
       "path": "/maps/api/geocode/json?address=4%20Burr%20Street%20New%20Haven%20CT",
       "href": "https://maps.googleapis.com/maps/api/geocode/json?address=4%20Burr%20Street%20New%20Haven%20CT"
     }
-    ```
+```
 eg protocol used, host, query
 
 After **request**, we also have our own custom **headers** eg
+
 ```
 "headers": {
       "accept": "application/json"
     }
 ```
 This was set when we in the creation of the request itself:
+
 ```javascript
 request({
     url: "https://maps.googleapis.com/maps/api/geocode/json?address=4%20Burr%20Street%20New%20Haven%20CT",
@@ -587,6 +592,7 @@ The **statusCode** is very important for determining whether we should proceed w
 If there are errors, the **statusCode** only detects that an error occurred on the server-side eg (crashing servers- 500, non-existent data - 404).
 There are also errors that can happen during the process of making the HTTP request, before it is even sent out eg spelling error on the domain or non-existent domain. In this case, there will be an error in the request object as we cannot even connect to a server. An error during the making of the request could happen if we do not have internet access. 
 An error due to a mispelt server (thus non-existent) could look like this:
+
 ```
 {
   "code": "ENOTFOUND",
