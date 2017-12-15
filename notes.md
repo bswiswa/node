@@ -419,6 +419,7 @@ Inside of callback
 The second **setTimeout()** surprisingly executes after the last line. Why does our function with zero time out not execute immediately?
 
 ### Behind the scenes
+<!--
 --------------                 ------------------------
 | Call Stack |    ------->>    |     Node APIs        |
 --------------                  -----------------------
@@ -429,6 +430,7 @@ Loop    v|                                v
 ------------------------------------------------------
 |              Callback Queue                        |
 ------------------------------------------------------
+-->
 
 #### Call Stack
 The call stack is a data structure that keeps track of program execution inside of V8. 
