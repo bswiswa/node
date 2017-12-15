@@ -314,6 +314,59 @@ Which is again just a swap of node with nodemon
 
 Chrome DevTools is useful when you have browser access but if you are on a server, then the command-line debugger is your only way of debugging so it is good to know both.
 
+## Arrow Functions vs Regular functions
+Arrow functions cannot be used everywhere that regular functions (ES5 type) are used. There are some special properties of arrow functions which make this so:
+
+1. arrow functions do not bind the local **this** object 
+
+```javascript
+let user = {
+    name: "Batsi",
+    sayHiOne: function(){
+        console.log(`Hi, I'm ${this.name});
+    },
+    sayHiTwo: () => {
+        console.log(`Hi, I'm ${this.name}`);
+    }
+};
+
+user.sayHiOne(); // Hi, I'm Batsi
+user.sayHiTwo(); // Hi, I'm undefined
+```
+Notice that sayHiOne() and sayHiTwo() are only different in that sayHiOne() uses a regular function expression whereas sayHiTwo() is an arrow function. 
+The output of the two functions shows how the arrow function is not aware of the local **this** reference and thus returns **undefined**.
+
+ES6 allows has an alternative way of defining object methods and making sure that the **this** reference is maintained. This is by defining object methods as follows:
+
+```javascript
+let user = {
+    name: "Batsi",
+    sayHi(){
+        console.log(`Hi, I'm ${this.name});
+        }
+};
+
+user.sayHi(); // Hi, I'm Batsi
+```
+Notice that this way of defining methods skips the `:` and an arrow.
+
+Regular functions also have access to the **arguments** array (more of an object with array-like properties). This arguments object is specified in a regular function eg
+```javascript
+let user = {
+    name: "Batsi",
+    sayHi(){
+        console.log(arguments)
+        console.log(`Hi, I'm ${this.name});
+        }
+};
+
+user.sayHi(1,2); 
+// { '0': 1, '1': 2 }   <-- arguments
+// Hi, I'm Batsi
+```
+...in arrow functions, we get the global arguments object and not the arguments for that function.
+So be aware that arrow functions do not bind the **arguments** or **this** keyword.
+
 
 
 
