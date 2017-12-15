@@ -367,8 +367,56 @@ user.sayHi(1,2);
 ...in arrow functions, we get the global arguments object and not the arguments for that function.
 So be aware that arrow functions do not bind the **arguments** or **this** keyword.
 
+## Asynchronous Node.js
+An asynchronous program continues to run even whilst waiting on some of its subprocesses to complete.
 
+```javascript
+console.log("Starting app");
 
+console.log("Finishing up");
+```
+These two will always run synchronously.
+In order to demonstrate some basic asynchronous functionality we can use the **setTimeout()** function. This function takes 2 arguments - the first being a function that is going to get called after a specified amount of time. The second parameter is the number of milliseconds you want to wait before firing the function.
+```javascript
+console.log("Starting app");
+
+setTimeout(() => console.log("Inside of callback"), 2000);
+
+console.log("Finishing up");
+```
+The output of running this file eg `node app.js` initially looks like this:
+```
+Starting app
+Finishing up
+```
+...then about 2 seconds later:
+```
+Starting app
+Finishing up
+Inside of callback
+```
+This is not the order we wrote the code but this is the order in which it executes.
+By using non-blocking I/O we are able to wait two seconds for one process but in the mean time we are not blocking the rest of the program from executing.
+
+What is the output of this code below where we have a process with zero timeout before `console.log("Finishing up")`?
+```javascript
+console.log("Starting app");
+
+setTimeout(() => console.log("Inside of callback"), 2000);
+
+setTimeout(() => console.log("Zero timeout"), 0);
+
+console.log("Finishing up");
+```
+
+The output is:
+```
+Starting app
+Finishing up
+Zero timeout
+Inside of callback
+```
+The second **setTimeout()** surprisingly executes after the last line. Why does our function with zero time out not execute immediately?
 
 
 
