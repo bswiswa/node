@@ -607,5 +607,37 @@ The most important field here is the **code**
 
 If we make a successful call to a server the **statusCode** of the response is 200 and the **error** is `null`
 
+### Using yargs with no command
+When you have a command-line interface application that has only one function, there is no need for it to have commands, it just need to run with the provided parameters or options. For example if we create an app that returns the longitude of an address, the only option we need provided is that address. The application need not have a command like `longitude` or `getLongitude`
 
+In such a case we can specify only the options for yargs. Each option can specify whether it is demanded(always required, except for **help**), what its other aliases are, description, variable type eg string.
+If we want to add a **--help** flag we also run the help() method on yargs.
 
+```javascript
+const argv = yargs
+                .options({
+                    a: { 
+                        demand: true,
+                        alias: "address",
+                        describe: "Address to fetch longitude for",
+                        string: true
+                    }
+                })
+                .help()
+                .alias("help", "h")
+                .argv;
+
+```
+This code will require a **-a** or **--adress** flag when it runs which is always read as a string.
+
+### URI Encoding and Decoding
+To generate a URI, we must encode special characters eg commas (%2C%), spaces (%20%) etc. 
+A useful function for doing such encoding is **encodeURIComponent**
+A function for decoding a URI back to a regular string is **decodeURIComponent**
+Both take a string and return a string.
+```javascript
+let encodedAddress = encodeURIComponent("1301 New Haven, PA");
+console.log(encodedAddress); //1301%20New%20Haven%2C%20PA
+let address = decodeURIComponent(encodedAddress);
+console.log(address);  //1301 New Haven, PA
+```
