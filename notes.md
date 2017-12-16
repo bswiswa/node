@@ -585,7 +585,7 @@ request({
     console.log(JSON.stringify(response, undefined, 2));
 });
 ```
-...right at the line `json: true` which specified that we wanted our body to be returned as JSON.
+...right at the line `json: true` which specified that we wanted our body to be returned as an object parsed from JSON.
 So in summary the **response** object stores information about the response and the request itself.
 ### Errors on the HTTP request object
 The **statusCode** is very important for determining whether we should proceed with our code and it will be checked on whenever we are working with HTTP requests.
