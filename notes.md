@@ -641,3 +641,61 @@ console.log(encodedAddress); //1301%20New%20Haven%2C%20PA
 let address = decodeURIComponent(encodedAddress);
 console.log(address);  //1301 New Haven, PA
 ```
+## Promises
+Solve a lot of the problems that happen when you are working with asynchronous code.
+So far we have used callbacks to manage asynchronous processes and make sure they happen at the right time.
+Using promises can clean up our code.
+Making a promise:
+```javascript
+let somePromise = new Promise((resolve, reject) => {
+    resolve("It worked!");
+});
+```
+A **Promise** can have one of two states - fulfilled or rejected. Promises have two functions that we can call - **resolve** and **reject**. These functions can only return one item each. 
+When we cannot deliver on a promise it is rejected. 
+Whatever is passed to resolve is the value that we will get back from the promise.
+In order to do something when the promise gets resolved or rejected we need to call the special promise method called **then**.
+**then** function lets us provide callback functions for both success cases and error cases - **then(onFulfilled, onRejected)** 
+
+This is one way in which promises differ just using callback functions for asynchronous events -- you could only provide one callback function and its arguments let us know whether or not things went well.
+In **Promises** there are 2 functions and that is what determines whether or not things went as planned. 
+
+```javascript
+let somePromise = new Promise((resolve, reject) => {
+    resolve("It worked!");
+});
+
+somePromise.then((message)=>{
+    console.log("Success", message);
+}, (errorMessage) => {
+    console.log("Error", errorMessage);
+});
+```
+Notice that the **then** function has 2 callback functions for when the promise is resolved and for when it is rejected.
+
+It is important to understand that you can only resolve or reject a promise once. If you resolve a promise you cannot reject it later. For example for the following code:
+
+```javascript
+let somePromise = new Promise((resolve, reject) => {
+    setTimeout(()=> {
+        resolve("It worked!");
+        reject("Unable to fulfill promise");
+    }, 2500);
+    
+});
+
+somePromise.then((message)=>{
+    console.log("Success", message);
+}, (errorMessage) => {
+    console.log("Error", errorMessage);
+});
+```
+...the Promise is being resolved and subsequently rejected which is not allowed. As a result of this the rejected state will never come to be as the promise is already fulfilled. Thus the output for the code above is always
+```
+Success It worked!
+```
+Also if you resolve a promise with a certain value, you cannot resolve the promise again with a different value.
+
+These conditions for promises are not there when just using callbacks. We can use a callback function as much as we want which can lead to mistakes.
+
+Before a **Promise** is resolved or rejectedit is in a state called **pending**. A Promise is considered **settled** when it has either been resolved or rejected.
