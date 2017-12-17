@@ -1056,3 +1056,58 @@ In order to run the **test-watch** custom command, we use the **npm run** comman
 ```
 npm run test-watch
 ```
+### Using an assertion library
+An assertion library (like the **expect** library) lets us make assertions about variables and reduce the code we have to write
+```javascript
+it("should return the square of a number", () => {
+    let res = utils.square(30);
+    if(res !== 900) throw new Error(`Expected 9 but got ${res}`);
+});
+```
+...can be replaced with
+```javascript
+let res = utils.square(30);
+expect(res).toBe(900);
+```
+
+We can also chain assertions
+```javascript
+it("shoud add two numbers", () => {
+   let res = utils.add(33, 11);
+    expect(res).toBeA("number").toBe(44);
+    
+});
+```
+
+Note that the **toBe()** function compares two variables using the "===" operator. Thus it works for primitive types eg number, string, boolean, undefined but not with objects and arrays. Thus the test below fails:
+```javascript
+it("should be equal", () => {
+    expect({name: "Batsi"}).toBe({ name: "Batsi"});
+});
+```
+
+In order to compare objects, we use a different method called **toEqual()**. Now the test will pass:
+```javascript
+it("should be equal", () => {
+    expect({name: "Batsi"}).toEqual({ name: "Batsi"});
+});
+```
+Opposite of **toEqual()** is **toNotEqual()**
+
+
+To check if an object or array has a certain property, we can use the **toInclude()** function.
+
+```javascript
+it("should have", () => {
+    expect(["Sam","Batsi","Shingi"]).toInclude("Shingi");
+});
+```
+..or for objects:
+
+```javascript
+it("should have", () => {
+    expect({name: "Batsi", age: 30}).toInclude({age: 30}));
+});
+```
+Opposite of **toInclude()** is **toExclude()**
+
