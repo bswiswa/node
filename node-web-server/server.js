@@ -3,10 +3,18 @@ const hbs = require("hbs");
 
 //create an express app
 let app = express();
-
+hbs.registerPartials(__dirname + "/views/partials");
 app.set("view engine", "hbs");
 //__dirname is provided by the main wrapper function
-app.use(express.static(__dirname+ '/public'));
+app.use(express.static(__dirname + '/public'));
+
+hbs.registerHelper("getYear", () =>{
+   return new Date().getFullYear();
+});
+
+hbs.registerHelper("screamIt", (text) =>{
+    return text.toUpperCase();
+});
 //set up a handler for an HTTP request
 app.get('/', (request, response)=>{
     //request has information about the request comin in eg headers, body information, method that called the request etc
@@ -16,7 +24,6 @@ app.get('/', (request, response)=>{
     response.render("home.hbs", {
         pageTitle: "Node Server",
         welcomeMessage: "Navigate to other pages for more information",
-        currentYear: getYear()
     });
 
 });
@@ -24,7 +31,6 @@ app.get('/', (request, response)=>{
 app.get("/about", (request, response)=>{
     response.render("about.hbs", {
         pageTitle: "About Page",
-        currentYear: getYear()
     });
 });
 

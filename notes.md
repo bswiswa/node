@@ -956,3 +956,7 @@ Now if we place an image called "img1.png" in the public folder of our applicati
 A templating engine can help us render HTML in a dynamic way and inject variables into the template.
 A templating engine can also help you create reusable markup for things like headers and footers.
 
+**NOTE** by default, nodemon doesn't watch hbs files. You can explicitly tell it to watch your **js** and **hbs** files by starting it with the -e flag which specifies the extensions to watch:
+```
+nodemon server.js -e js,hbs
+```
