@@ -799,3 +799,92 @@ The output of using the **catch** method as shown above is
 Arguments must be numbers
 ```
 Thus the second **then** is prevented from running.
+
+### Forcing Promises
+Not all packages work with **Promises** but you can create wrapper functions in such cases.
+For example:
+```javascript
+const request = require("request");
+
+let geocodeAddress = (address) => {
+    let encodedAddress = encodeURIComponent(address);
+    return new Promise((resolve, reject)=>{
+          //request(optionsObject, callback)
+    request({
+        url: `https://maps.googleapis.com/maps/api/geocode/json?address=${encodedAddress}`,
+        json: true
+    },(error, response, body)=>{
+        if(error){
+            reject("Unable to connect to Google servers");
+        } else if(body.status === "ZERO_RESULTS"){
+            reject("Unable to find that address");
+        }else if(response.statusCode === 200 && body.status === "OK"){
+            let address = body.results[0].formatted_address;
+            let location = body.results[0].geometry.location;
+            results = {
+                address,
+                lat: location.lat,
+                lng: location.lng
+            };
+            resolve(results);
+        }
+        });  
+    });
+    
+}
+
+module.exports = {
+    geocodeAddress
+};
+```
+Here the **request** package doesn't support Promises on its own and so we wrap it in a function that returns a Promise (with the request inside).
+The **axios** package supports **Promises** and its methods return **Promises** internally so we can readily chain onto them and not have to wrap them.
+Thus to make an application that gathers weather and displays it on the command-line you can write the following code:
+```javascript
+const yargs = require('yargs');
+const axios = require("axios");
+
+const argv = yargs
+                .options({
+                    a: { 
+                        demand: true,
+                        alias: "address",
+                        describe: "Address to fetch weather for",
+                        string: true
+                    }
+                })
+                .help()
+                .alias("help", "h")
+                .argv;
+
+let address = argv.a;
+
+let encodedAddress = encodeURIComponent(argv.a);
+let geocodeUrl = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodedAddress}`;
+
+//axios has promises built in and so we can automatically use functions like then on its function returns
+
+axios.get(geocodeUrl).then((response)=>{
+    if(response.data.status === "ZERO_RESULTS"){
+        throw new Error("Unable to find that address");
+    }
+    console.log(`Location:  ${response.data.results[0].formatted_address}`);
+    let lat = response.data.results[0].geometry.location.lat;
+    let lng = response.data.results[0].geometry.location.lng;
+    weatherUrl = `https://api.darksky.net/forecast/95ab2c8c9f2e65c34124f0786d028a1a/${lat},${lng}`;
+   
+    return axios.get(weatherUrl);
+}).then((response)=>{
+    let temp = response.data.currently.temperature;
+    let apparentTemperature = response.data.currently.apparentTemperature;
+    console.log(`It's currently ${temp}. It feels like ${apparentTemperature}`);
+}).catch(e =>{
+    if(e.code === "ENOTFOUND")
+        console.log("Unable to connect to API servers");
+    else{
+        console.log(e.message);
+    }
+} );
+```
+Notice how we can chaing **then** to **axios.get()**. This is only possible because **axios.get()** returns a Promise.
+
