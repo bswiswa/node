@@ -912,5 +912,42 @@ app.get('/', (request, response)=>{
 });
 
 //listen to requests at port 3000
-app.listen(3000);
+app.listen(3000, () => console.log("Server has started and is listening to port 3000"));
 ```
+The **get()** method takes in a string for the route and a callback function in which we can specify what to send back to the client in the **response.send()** method. We can send back text, JSON or HTML for example.
+
+### Using a static directory
+You can create a static directory with items that you want available to the public eg images, notes, articles. 
+It would be ineffiecient to have to add a route for each of these items just so they could be served as shown below:
+```javascript
+
+app.get('/img1', (request, response)=>{
+    response.send("img1.png");
+});
+app.get('/img2', (request, response)=>{
+    response.send("img2.png");
+});
+app.get('/img3', (request, response)=>{
+    response.send("img3.png");
+});
+app.get('/img4', (request, response)=>{
+    response.send("img4.png");
+});
+...
+```
+Instead it is more efficient to create a public folder where we can place every static element that we would like to serve. 
+This can be done using middleware (software that modifies how an underlying software works). In this case the middleware to use is **express.static()**. 
+
+**express.static()** takes in a path to a folder and makes the contents of that folder available via a url that calls on the name of the item directly.
+```javascript
+const express = require("express");
+
+let app = express();
+
+//__dirname is provided by the main wrapper function
+app.use(express.static(__dirname+ '/public'));
+
+app.listen(3000, () => console.log("Server has started and is listening to port 3000"));
+
+```
+Now if we place an image called "img1.png" in the public folder of our application, it can be readily served by going to the **/img1.png**.

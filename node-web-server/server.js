@@ -2,7 +2,8 @@ const express = require("express");
 
 //create an express app
 let app = express();
-
+//__dirname is provided by the main wrapper function
+app.use(express.static(__dirname+ '/public'));
 //set up a handler for an HTTP request
 app.get('/', (request, response)=>{
     //request has information about the request comin in eg headers, body information, method that called the request etc
@@ -23,4 +24,6 @@ app.get("/bad", (request, response) => {
     });
 });
 
-app.listen(3000);
+app.listen(3000, ()=>{
+    console.log("Server is up on port 3000");
+});
