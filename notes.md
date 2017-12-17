@@ -1022,3 +1022,37 @@ it("should return the square of a number", () => {
 });
 ```
 Running **npm test** will run the tests and print the output to the console.
+
+We can also automatically rerun our tests with nodemon by using the exec flag with the nodemon command eg
+```
+nodemon --exec 'npm test'
+```
+
+Alternatively, we can create a custom command in scripts of the **package.json** file eg below we are creating a custom command **test-watch** that detects changes in any of the test functions and reruns the test automatically using nodemon
+```javascript
+{
+  "name": "tests",
+  "version": "1.0.0",
+  "description": "Testing Node.js code",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha **/*.test.js",
+    "test-watch": "nodemon --exec \"npm test\""
+  },
+  "author": "bswiswa",
+  "license": "ISC",
+  "devDependencies": {
+    "mocha": "^3.0.0"
+  }
+}
+```
+Notice how the double-quotes are escaped out of in the package.json file
+as in:
+```
+"test-watch": "nodemon --exec \"npm test\""
+```
+In order to run the **test-watch** custom command, we use the **npm run** command. We cannot just use **npm test-watch** because **test-watch** is a custom command not a default one like **test**
+
+```
+npm run test-watch
+```
