@@ -951,3 +951,8 @@ app.listen(3000, () => console.log("Server has started and is listening to port 
 
 ```
 Now if we place an image called "img1.png" in the public folder of our application, it can be readily served by going to the **/img1.png**.
+
+### Dynamic HTML
+A templating engine can help us render HTML in a dynamic way and inject variables into the template.
+A templating engine can also help you create reusable markup for things like headers and footers.
+

@@ -1,7 +1,10 @@
 const express = require("express");
+const hbs = require("hbs");
 
 //create an express app
 let app = express();
+
+app.set("view engine", "hbs");
 //__dirname is provided by the main wrapper function
 app.use(express.static(__dirname+ '/public'));
 //set up a handler for an HTTP request
@@ -15,7 +18,7 @@ app.get('/', (request, response)=>{
 });
 
 app.get("/about", (request, response)=>{
-    response.send("<h1>About</h1>");
+    response.render("about.hbs");
 });
 
 app.get("/bad", (request, response) => {
