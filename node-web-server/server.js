@@ -79,6 +79,20 @@ app.get("/maintenance", (request, response) => {
    });
 });
 
+app.get("/projects", (request, response) => {
+    response.render("projects.hbs", {
+        pageTitle: "My Projects",
+        projects: [
+            "Learn C",
+            "Learn Java",
+            "Lean ES5 JavaScript",
+            "Learn ES6 JavaScript",
+            "Learn Node.js",
+            "Learn React and Redux"
+        ]
+    });
+});
+
 app.listen(port, ()=>{
     console.log(`Server is up on port ${port}`);
 });
