@@ -698,4 +698,104 @@ Also if you resolve a promise with a certain value, you cannot resolve the promi
 
 These conditions for promises are not there when just using callbacks. We can use a callback function as much as we want which can lead to mistakes.
 
-Before a **Promise** is resolved or rejectedit is in a state called **pending**. A Promise is considered **settled** when it has either been resolved or rejected.
+Before a **Promise** is resolved or rejected it is in a state called **pending**. A Promise is considered **settled** when it has either been resolved or rejected.
+
+For asynchronous operations, we can return new Promises and then settle them accordingly:
+```javascript
+let asyncAdd = (a,b) =>{
+    return new Promise((resolve, reject)=>{
+        setTimeout(()=>{
+            if(typeof a === "number" && typeof b === "number"){
+                resolve(a+b);
+            }else{
+                reject("Arguments must be numbers");
+            }
+        }, 1500)
+    });
+};
+asyncAdd(5,12).then((number)=> console.log(`Sum = ${number}`), (errorMessage) => console.log(errorMessage));
+```
+Here our the **then** function has its two callback methods that handle the two conditions of successful addition or an error. Note that Promises allow us to not have to use a lot of if statements.
+
+### Chaining Promises
+We can also chain Promises as shown next
+```javascript
+let asyncAdd = (a,b) =>{
+    return new Promise((resolve, reject)=>{
+        setTimeout(()=>{
+            if(typeof a === "number" && typeof b === "number"){
+                resolve(a+b);
+            }else{
+                reject("Arguments must be numbers");
+            }
+        }, 1500)
+    });
+};
+asyncAdd(5,10).then((sum)=> {
+    console.log(`Sum = ${sum}`);
+    return asyncAdd(sum, 10);   
+    }, 
+    (errorMessage) => console.log(errorMessage))
+    .then((result)=> console.log(`Result is ${result}`), (errorMessage)=> console.log(`Result Error: ${errorMessage}`)); 
+```
+
+...output is...
+
+```
+Sum = 15
+Result is 25
+```
+The problem here however is that if the first promise is rejected, the second promise will still run just because the first promise handles its error condition. Thus the second **then** will run and return the wrong result
+Below is an example of when the first promise fails:
+```javascript
+let asyncAdd = (a,b) =>{
+    return new Promise((resolve, reject)=>{
+        setTimeout(()=>{
+            if(typeof a === "number" && typeof b === "number"){
+                resolve(a+b);
+            }else{
+                reject("Arguments must be numbers");
+            }
+        }, 1500)
+    });
+};
+asyncAdd(5,"a string").then((sum)=> {
+    console.log(`Sum = ${sum}`);
+    return asyncAdd(sum, 10);   
+    }, 
+    (errorMessage) => console.log(errorMessage))
+    .then((result)=> console.log(`Result is ${result}`), (errorMessage)=> console.log(`Result Error: ${errorMessage}`)); 
+```
+...output is...
+
+```
+Arguments must be numbers
+Result is undefined
+```
+We can avoid this by removing the error handling states and using a **catch** statement as follows:
+```javascript
+let asyncAdd = (a,b) =>{
+    return new Promise((resolve, reject)=>{
+        setTimeout(()=>{
+            if(typeof a === "number" && typeof b === "number"){
+                resolve(a+b);
+            }else{
+                reject("Arguments must be numbers");
+            }
+        }, 1500)
+    });
+};
+asyncAdd(5,"10").then((sum)=> {
+    console.log(`Sum = ${sum}`);
+    return asyncAdd(sum, 10);   
+    })
+    .then((result)=> console.log(`Result is ${result}`))
+    .catch((errorMessage) => console.log(errorMessage));
+
+```
+The **catch** method takes in one function which is the error handler
+The output of using the **catch** method as shown above is
+```
+Arguments must be numbers
+```
+Thus the second **then** is prevented from running.

@@ -4,20 +4,23 @@ const request = require('request');
 /* to make a forecast request
  "https://api.darksky.net/forecast/[key]/lat,long
  */
-let getWeather = (lat, lng, callback) => {
-   request({
-    url: `https://api.darksky.net/forecast/95ab2c8c9f2e65c34124f0786d028a1a/${lat},${lng}`,
-    json: true
-}, (error, response, body) => {
+let getWeather = (lat, lng) => {
+    return new Promise((resolve, reject)=> {
+        request({
+            url: `https://api.darksky.net/forecast/95ab2c8c9f2e65c34124f0786d028a1a/${lat},${lng}`,
+        json: true
+        }, (error, response, body) => {
         if(!error && response.statusCode === 200){
             let weatherResults = body.currently;
-            callback(undefined, weatherResults);
+            resolve(weatherResults);
         }
         else{
-            callback("Unable to fetch weather");
+            reject("Unable to fetch weather");
         }
         
-    }); 
+        }); 
+    });
+
 }
 
 module.exports = {

@@ -17,18 +17,11 @@ const argv = yargs
 
 let address = argv.a;
 
-geocode.geocodeAddress(address, (errorMessage, results) => {
-    if(errorMessage)
-        console.log(errorMessage);
-    else{
-        weather.getWeather(results.lat, results.lng, (errorMessage, weatherResults)=>{
-            if(errorMessage)
-                console.log(errorMessage);
-            else
-                console.log(`Summary: ${weatherResults.summary}\nTemperature: ${weatherResults.temperature}\nIt feels like ${weatherResults.apparentTemperature} deg F`);
-        });
-    }
-});
-
-
+geocode.geocodeAddress(address)
+    .then((location)=>{
+    console.log(`Address: ${location.address}`);
+    return weather.getWeather(location.lat, location.lng);
+    }).then((forecast)=>{
+        console.log(`Summary: ${forecast.summary}\nTemperature: ${forecast.temperature}\nIt feels like ${forecast.apparentTemperature} deg F`);
+    }).catch( errorMessage => console.log(errorMessage));
 
