@@ -889,3 +889,28 @@ axios.get(geocodeUrl).then((response)=>{
 Notice how we can chaing **then** to **axios.get()**. This is only possible because **axios.get()** returns a Promise.
 
 ## Web Servers & Application Development
+We can use the Express.js's express npm package in order to start using the Express framework in our application.
+```
+npm install express --save
+```
+
+We can create a simple server using express as shown below:
+```javascript
+const express = require("express");
+
+//create an express app
+let app = express();
+
+//set up a handler for an HTTP request
+app.get('/', (request, response)=>{
+    /*request has information about the request comin in eg headers, body information, method that called the request etc 
+    response has methods available for responding to the request eg what data to send back, HTTP status codes etc*/
+    //send body data
+  //Express can detect objects, change them to JSON then send them
+    response.send("<h1>Hello Express</h1>");
+
+});
+
+//listen to requests at port 3000
+app.listen(3000);
+```

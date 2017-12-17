@@ -9,16 +9,18 @@ app.get('/', (request, response)=>{
     //response has methods available for responding to the request eg what data to send back, HTTP status codes etc
     //send body data
   //Express can detect objects, change them to JSON then send them
-    response.send({
-        name: "Batsi",
-        likes: [
-            "coding",
-            "eating"
-        ]
-    });
+    response.send("<h1>Hello Express</h1>");
 
 });
 
+app.get("/about", (request, response)=>{
+    response.send("<h1>About</h1>");
+});
 
+app.get("/bad", (request, response) => {
+    response.send({
+      errorMessage: "Error handling request"   
+    });
+});
 
 app.listen(3000);
