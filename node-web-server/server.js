@@ -13,12 +13,19 @@ app.get('/', (request, response)=>{
     //response has methods available for responding to the request eg what data to send back, HTTP status codes etc
     //send body data
   //Express can detect objects, change them to JSON then send them
-    response.send("<h1>Hello Express</h1>");
+    response.render("home.hbs", {
+        pageTitle: "Node Server",
+        welcomeMessage: "Navigate to other pages for more information",
+        currentYear: getYear()
+    });
 
 });
 
 app.get("/about", (request, response)=>{
-    response.render("about.hbs");
+    response.render("about.hbs", {
+        pageTitle: "About Page",
+        currentYear: getYear()
+    });
 });
 
 app.get("/bad", (request, response) => {
@@ -30,3 +37,7 @@ app.get("/bad", (request, response) => {
 app.listen(3000, ()=>{
     console.log("Server is up on port 3000");
 });
+    
+function getYear(){
+    return new Date().getFullYear();
+}
