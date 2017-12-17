@@ -960,3 +960,65 @@ A templating engine can also help you create reusable markup for things like hea
 ```
 nodemon server.js -e js,hbs
 ```
+
+## Testing Node.js code
+You can use the Mocha framework to set up a test suite. A test suite gives us a place to configure our individual test cases and to be able to run the entire file of tests.
+
+### Installing mocha
+**mocha** is available as an npm package. It should be installed with the **save-dev** flag so that it is not installed in the production version of our app.
+```
+npm install mocha --save-dev
+```
+As a result of using the --save-dev flag, when you open the package.json file, mocha will be in the devDependencies section (not the regular **dependencies** section:
+```javascript
+{
+  "name": "tests",
+  "version": "1.0.0",
+  "description": "Testing Node.js code",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha **/*.test.js"
+  },
+  "author": "bswiswa",
+  "license": "ISC",
+  "dependencies": {
+    "lodash": 3.1.1
+  },
+  "devDependencies": {
+    "mocha": "^3.0.0"
+  }
+}
+```
+Mocha test files should have the extension **.test.js** eg *utils.test.js* which would be a test file for *test.js*
+
+mocha has a command that you can use to run a target .test.js file but since we installed mocha into our project only, we cannot run it from the terminal.
+Instead, we modify the package.json file's scripts section to include a command for mocha to test all .test.js files. You can see this in the above package.json file.
+So after adjusting the scripts and adding a **test** property, we can run all tests using
+```
+npn test
+```
+
+Mocha is based on behavior-driven development.
+
+We can have a **utils.js** function which looks like this:
+```javascript
+module.exports.add = (a,b) => a + b;
+
+module.exports.square = x => x*x;
+```
+...and a **utils.test.js** function which looks like this:
+```javascript
+const utils = require("./utils");
+
+it("shoud add two numbers", () => {
+   let res = utils.add(33, 11);
+   if(res !== 44 ) throw new Error(`Expected 44 but got ${res}`);
+    
+});
+
+it("should return the square of a number", () => {
+    let res = utils.square(30);
+    if(res !== 900) throw new Error(`Expected 9 but got ${res}`);
+});
+```
+Running **npm test** will run the tests and print the output to the console.
