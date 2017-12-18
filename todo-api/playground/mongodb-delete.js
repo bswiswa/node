@@ -7,8 +7,14 @@ MongoClient.connect("mongodb://localhost:27017/TodoApp", (err, database) =>{
     console.log("Connected to MongoDB server");
     const db = database.db("TodoApp");
     //delete many
-    db.collection("Todos").deleteMany({ text: "Eat lunch"}).then((result)=> { console.log(result)}, (err)=> { console.log("Failed to delete many values")});
+//    db.collection("Todos").deleteMany({ text: "Eat lunch"}).then((result)=> { console.log(result)}, (err)=> { console.log("Failed to delete many values")});
+    
     //delete one
+    db.collection("Todos").deleteOne({ text: "Eat lunch"}).then((result) => {
+        console.log(result);
+    }, (err) => {
+        console.log("Unable to delete one", err);
+    });
     
     //findOneAndDelete + return deleted value
     
