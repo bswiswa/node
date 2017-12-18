@@ -24,14 +24,30 @@ let Todo = mongoose.model("Todo",
     }
 });
 
-//create an instance
-let aTodo = new Todo({ text: " Edit "});
-
-aTodo.save().then((result)=>{
-   console.log(`Saved todo ${result}`) 
-}, (err)=> {
-   console.log("Unable to save Todo", err); 
+let User = mongoose.model("User", {
+    email: {
+        type: String,
+        required: true,
+        trim: true,
+        minlength: 1
+    }   
 });
+
+let names = ["shaima", "vamoyo", "vincent", "rugare", "tadiwa"];
+
+for(let i = 0 ; i < 5; i++){
+    let user = new User({ email: "   " });
+    user.save().then((result)=>{console.log(`User added\n ${JSON.stringify(result, undefined, 2)}`)}, (err)=>{ console.log("Failed to add user", err)});
+}
+
+////create an instance
+//let aTodo = new Todo({ text: " Edit "});
+//
+//aTodo.save().then((result)=>{
+//   console.log(`Saved todo ${result}`) 
+//}, (err)=> {
+//   console.log("Unable to save Todo", err); 
+//});
 
 //let tasks = ["Take out trash", "Clean house", "Hang up Christmas tree lights", "Study", "Read for pleasure"];
 //for(let i=0; i < 5; i++){
