@@ -28,6 +28,10 @@ aTodo.save().then((result)=>{
    console.log("Unable to save Todo", err); 
 });
 
-
+let tasks = ["Take out trash", "Clean house", "Hang up Christmas tree lights", "Study", "Read for pleasure"];
+for(let i=0; i < 5; i++){
+   let todo = new Todo({ text: tasks[i], completed: (i%2 == 0)? true: false});
+    todo.save().then((result)=>{console.log(`todo saved successfully ${JSON.stringify(result, undefined, 2)}`);}, (err)=>{ console.log("Could not save todo", err)});
+}
 
             
