@@ -19,7 +19,6 @@ app.post("/todos", (request, response) => {
 
 app.get("/todos", (request, response) => {
    Todo.find().then((todos)=>{
-       console.log(todos);
        //better to send an object as we can use that object more flexibly later
        response.send({ todos });
    }, (err)=> { 
