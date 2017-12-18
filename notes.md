@@ -12,7 +12,14 @@ Run the `node` command to begin a node process. A node process will allow you to
 
 ## Execution context
 When JavaScript runs in the browser, the global execution context where everything is contained is the **window** object.
-In Node, we are independent of the browser so the global execution context is different. The global object in this case is not **window** but **global**.
+In Node, we are independent of the browser so the global execution context is different. The global object in this case is not **window** but **global**. The window object is a property of the global object in this case so 
+```javascript
+console.log(global.window === window); //true
+```
+...outside of the browser, we have the process object
+```javascript
+console.log(global.process === process); //true
+```
 
 Inside of the browser, you have access to the **document** object, which refers to the DOM. The DOM contains nodes corresponding to every item displayed in the browser.
 Making changes to the **document** object is the way of manipulating the displayed content in the DOM and ultimately the browser.
@@ -1410,4 +1417,11 @@ We can then go on to use these properties as usual:
 ```javascript
 let obj = new ObjectID();
 console.log(obj.getTimestamp());
+```
+
+### Mongoose
+We use Mongoose as an ORM which helps us avoid re-writiing boilerplate code
+
+```
+npm i mongoose --save
 ```

@@ -9,6 +9,7 @@
   "author": "bswiswa",
   "license": "ISC",
   "dependencies": {
-    "mongodb": "^3.0.0-rc0"
+    "mongodb": "^3.0.0-rc0",
+    "mongoose": "^4.5.9"
   }
 }
