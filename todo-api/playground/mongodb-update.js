@@ -11,7 +11,7 @@ MongoClient.connect("mongodb://localhost:27017/TodoApp", (err, database) =>{
 //    db.collection("Todos").findOneAndUpdate({ _id: new ObjectID("5a37ef4dda468ca42e7d7810")}, { $set: { completed: true }}, { returnOriginal: false }).then((result)=>{ console.log(`New updated object\n ${JSON.stringify(result.value, undefined, 2)}`)}, (err)=>{console.log("Could not update document", err);});
     
     //update all
-    db.collection("Users").updateMany({ name: { $ne: "Batsi" }}, { $set: { name: "Batsi"}}).then((result)=>{console.log(`${result.matchedCount} documents were found. ${result.modifiedCount} were updated`);}, (err)=>{ console.log("Could not update many documents", err);});
+    db.collection("Users").updateMany({ name: "Batsi"}, { $inc: { age: 5}}).then((result)=>{console.log(`${result.matchedCount} documents were found. ${result.modifiedCount} were updated`);}, (err)=>{ console.log("Could not update many documents", err);});
     
     
 //    database.close();
