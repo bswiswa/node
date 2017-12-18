@@ -1147,3 +1147,94 @@ it("should async add two numbers", (done) => {
 ```
 ...now our test runs and fails as we expect it to. Here mocha will not report its results right away because it waits for **done** to get executed.
 mocha also warns when a test takes too long to execute (~ over 2 sec).
+
+### Testing Express.js app
+You can use **supertest** library. It has built in support for express.
+```javascript
+const request = require("supertest");
+const app = require("./server").app;
+const expect = require("expect");
+
+it("should return 404 response", (done) => {
+    request(app)
+        .get("/")
+        .expect(404)
+        .expect((response) => {
+            expect(response.body).toInclude({
+                error: "Page not found"
+            });
+        }) 
+        .end(done);
+});
+
+it("should return a an array of users", (done) => {
+    request(app)
+        .get("/users")
+        .expect(200)
+        .expect((response) => {
+            expect(response.body).toInclude("Batsi")
+        })
+        .end(done);
+});
+```
+Notice that we wrap the app into an object of *request*
+
+
+#### Grouping tests
+We can group tests using **describe()***
+```javascript
+describe("Utils", ()=> {
+    it("should add two numbers", () => {
+        let res = utils.add(33, 11);
+        expect(res).toBeA("number").toBe(44);
+    
+        //   if(res !== 44 ) throw new Error(`Expected 44 but got ${res}`);   
+    });
+
+    it("should return the square of a number", () => {
+        let res = utils.square(30);
+        expect(res).toBeA("number").toBe(900);
+    });
+});
+```
+When we run these tests, they will be grouped under "Utils"
+```
+...other tests...
+
+Utils
+    ✓ should add two numbers
+    ✓ should return the square of a number
+    
+...other tests...
+
+```
+You can even make subgroups
+```javascript
+describe("Utils", ()=> {
+    describe("add", ()=>{
+            it("should add two numbers", () => {
+            let res = utils.add(33, 11);
+            expect(res).toBeA("number").toBe(44);
+    
+            //   if(res !== 44 ) throw new Error(`Expected 44 but got ${res}`);   
+        });
+    });
+    
+    describe("square", () => {
+            it("should return the square of a number", () => {
+            let res = utils.square(30);
+            expect(res).toBeA("number").toBe(900);
+        });
+    });
+
+    
+});
+```
+...outputs...
+```
+Utils
+    add
+      ✓ should add two numbers
+     square
+      ✓ should return the square of a number
+```
