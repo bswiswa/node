@@ -1334,3 +1334,46 @@ describe("App", () => {
    }); 
 });
 ```
+
+## MongoDB, Mongoose and REST APIs
+To connect to MongoDB from Express.js application we can use the **node-mongodb-native** package
+
+Install the mongodb library in our application
+```
+npm install mongodb --save
+```
+With it installed we can connect to the database via the MongoClient which allows us to connect to the database server and issue commands that modify it.
+
+```javascript
+const MongoClient = require("mongodb").MongoClient;
+MongoClient.connect("mongodb://localhost:27017/Todo", (err, db) =>{
+    if(err){
+        return console.log("Unable to connect to MongoDB server");
+    }
+    console.log("Connected to MongoDB server");
+    db.close();
+});
+```
+
+To connect to database, create a collection and insert a document we do the following (for MongoDB v >= 3):
+```javascript
+const MongoClient = require("mongodb").MongoClient;
+MongoClient.connect("mongodb://localhost:27017/TodoApp", (err, database) =>{
+    if(err){
+        return console.log("Unable to connect to MongoDB server");
+    }
+    console.log("Connected to MongoDB server");
+    const db = database.db("TodoApp");
+    db.collection("Todos").insertOne({
+        text: "Learn Node.js",
+        completed: false,
+    }, (err, result) => {
+        if(err){
+            return console.log("Unable to todo document", err);
+        }
+        console.log(JSON.stringify(result.ops, undefined, 2));
+    });
+    
+    database.close();
+});
+```
