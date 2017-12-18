@@ -1111,3 +1111,39 @@ it("should have", () => {
 ```
 Opposite of **toInclude()** is **toExclude()**
 
+### Testing Asynchronous Functions
+mocha needs to be configured to work with asynchronous functions otherwise, all asynchronous tests will always pass. If we are trying to test the following function
+```javascript
+module.exports.asyncAdd = (a,b, callback) => {
+    setTimeout(()=>{
+     callback(a+b);   
+    }, 1000);
+};
+```
+...with
+
+```javascript
+
+it("should async add two numbers", () => {
+   utils.asyncAdd(4,3, (sum)=>{
+      expect(sum).toBeA("number").toBe(10); 
+   }); 
+});
+```
+what happens is that the function returns before the asynchronous callback function gets called. It is essentially the same as
+```javascript
+
+it("should async add two numbers", () => {}); 
+```
+To indicate to mocha that this is an asynchronous test, we provide an argument inside of the callback function we pass to **it**. We can call that argument anything but here we choose to call it **done**
+
+```javascript
+it("should async add two numbers", (done) => {
+   utils.asyncAdd(4,3, (sum)=>{
+      expect(sum).toBeA("number").toBe(10);
+       done();
+   }); 
+});
+```
+...now our test runs and fails as we expect it to. Here mocha will not report its results right away because it waits for **done** to get executed.
+mocha also warns when a test takes too long to execute (~ over 2 sec).

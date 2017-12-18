@@ -23,4 +23,18 @@ it("should return first and last name correctly", () => {
     let fullName = "Batsi Swiswa";
     utils.setName(user, fullName);
     expect(user).toInclude({ firstName: "Batsi"}).toEqual({ age: 30, firstName: "Batsi", lastName: "Swiswa"});
-})
+});
+
+it("should async add two numbers", (done) => {
+   utils.asyncAdd(4,3, (sum)=>{
+      expect(sum).toBeA("number").toBe(7);
+       done();
+   }); 
+});
+
+it("should async square a number", (done) => {
+    utils.asyncSquare(5, (square) => {
+        expect(square).toBeA("number").toBe(25);
+        done();
+    });
+});
