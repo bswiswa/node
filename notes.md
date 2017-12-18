@@ -1238,3 +1238,99 @@ Utils
      square
       ✓ should return the square of a number
 ```
+#### Spies
+Let you swap out a real function for a testing utility. When that test function gets called you can check to see if it was called with certain arguments.
+
+You create a spy by calling the function **expect.createSpy()** and saving the function it returns in a variable.
+
+```javascript
+const expect = require("expect");
+
+describe("App", () => {
+   it("should call the spy correctly", () => {
+       let spy = expect.createSpy();
+       //call the spy here for illustration purposes
+       spy();
+       expect(spy).toHaveBeenCalled();
+   }); 
+});
+```
+The above code checks if a spy() method has been called. 
+
+We can also check if it has been called with certain parameters:
+```javascript
+const expect = require("expect");
+
+describe("App", () => {
+   it("should call the spy correctly", () => {
+       let spy = expect.createSpy();
+       //call the spy here for illustration purposes
+       spy("Andrew", 25);
+       expect(spy).toHaveBeenCalledWith("Andrew", 25);
+   }); 
+});
+```
+For our purposes we are looking for a way to replace an actual function with a spy so we can verify that functions are indeed being called as we expect
+
+To do this we can use the module called **rewire** which lets us swap out variables for our tests. We can use it to call a spy instead of the application function.
+
+For our example, we have 2 files
+**db.js**
+```javascript
+module.exports.saveUser = (user) => {
+    console.log("Saving the user", user);
+};
+```
+a module which exports the saveUser function
+
+**app.js**
+```javascript
+let db = require("./db");
+
+module.exports.handleSignup = (email, password) => {
+    //check if email exists
+    
+    db.saveUser({ email, password });
+    
+    //send welcome email
+};
+```
+another module that uses the db module and exports the handleSignup method.
+
+We want to test that the db.saveUser method is called correctly with the right object variable. In order to do this we need to create a our own db variable with a spy method that we can then check to see if it was called correctly.
+
+This is tested below with comments:
+```javascript
+const expect = require("expect");
+const rewire = require("rewire");
+
+let app = rewire("./app");
+/* rewire loads the app through require but adds two methods:
+app.__set__ and app.__get__
+We can use these functions to mock out various data inside app.js
+*/
+
+describe("App", () => {
+    let db = {
+        saveUser: expect.createSpy()
+    };
+    //swap out the db variable in app with the one we have here with the spy
+    app.__set__("db", db);
+    
+    it("should call saveUser with user object", ()=>{
+       let email = "dz@gmail.com";
+       let password = "123456";
+        app.handleSignup(email, password);
+        /* not that the handleSignUp is called but its db variable is now set to the one here and so the spy is called
+        */
+        expect(db.saveUser).toHaveBeenCalledWith({ email, password});
+    });
+    
+   it("should call the spy correctly", () => {
+       let spy = expect.createSpy();
+       //call the spy here for illustration purposes
+       spy("Andrew", 25);
+       expect(spy).toHaveBeenCalledWith("Andrew", 25);
+   }); 
+});
+```
