@@ -17,11 +17,12 @@ MongoClient.connect("mongodb://localhost:27017/TodoApp", (err, database) =>{
 //    });
     
     //findOneAndDelete + return deleted value
-    db.collection("Todos").findOneAndDelete({ text: "Eat lunch"}).then((result) => {
-        console.log("deleted one");
-      console.log(JSON.stringify(result.value, undefined, 2));  
-    }, (err) => { console.log("Unable to findOneAndDelete", err); 
-                });
+//    db.collection("Todos").findOneAndDelete({ text: "Eat lunch"}).then((result) => {
+//        console.log("deleted one");
+//      console.log(JSON.stringify(result.value, undefined, 2));  
+//    }, (err) => { console.log("Unable to findOneAndDelete", err); 
+//                });
+    db.collection("Todos").findOneAndDelete({ _id: new ObjectID("5a37cc67291fb336089dbd62")}).then((result)=>{ console.log(`Deleted: ${JSON.stringify(result.value)}`)}, (err)=> { console.log("Failed to find and delete one document", err)});
     
 //    database.close();
 });
