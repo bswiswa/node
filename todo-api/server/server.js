@@ -10,17 +10,22 @@ mongoose.connect("mongodb://localhost:27017/TodoApp");
 let Todo = mongoose.model("Todo", 
 {
     text: {
-        type: String
+        type: String,
+        required: true,
+        minlength: 1,
+        trim: true
     },
     completed: {
-        type: Boolean
+        type: Boolean,
+        default: false
     }, completedAt: {
-        type: Number
+        type: Number,
+        default: null
     }
 });
 
-create an instance
-let aTodo = new Todo({ text: "Make dinner"});
+//create an instance
+let aTodo = new Todo({ text: " Edit "});
 
 aTodo.save().then((result)=>{
    console.log(`Saved todo ${result}`) 
@@ -28,10 +33,10 @@ aTodo.save().then((result)=>{
    console.log("Unable to save Todo", err); 
 });
 
-let tasks = ["Take out trash", "Clean house", "Hang up Christmas tree lights", "Study", "Read for pleasure"];
-for(let i=0; i < 5; i++){
-   let todo = new Todo({ text: tasks[i], completed: (i%2 == 0)? true: false});
-    todo.save().then((result)=>{console.log(`todo saved successfully ${JSON.stringify(result, undefined, 2)}`);}, (err)=>{ console.log("Could not save todo", err)});
-}
+//let tasks = ["Take out trash", "Clean house", "Hang up Christmas tree lights", "Study", "Read for pleasure"];
+//for(let i=0; i < 5; i++){
+//   let todo = new Todo({ text: tasks[i], completed: (i%2 == 0)? true: false});
+//    todo.save().then((result)=>{console.log(`todo saved successfully ${JSON.stringify(result, undefined, 2)}`);}, (err)=>{ console.log("Could not save todo", err)});
+//}
 
             
