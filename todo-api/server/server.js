@@ -17,6 +17,16 @@ app.post("/todos", (request, response) => {
     todo.save().then((result)=>{ response.send(result)}, (err)=> { response.status(400).send(err)});
 });
 
+app.get("/todos", (request, response) => {
+   Todo.find().then((todos)=>{
+       console.log(todos);
+       //better to send an object as we can use that object more flexibly later
+       response.send({ todos });
+   }, (err)=> { 
+       response.status(400).send(err);
+    });
+});
+
 app.listen(3000, () => {
     console.log("App started on port 3000");
 });
