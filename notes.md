@@ -1377,3 +1377,37 @@ MongoClient.connect("mongodb://localhost:27017/TodoApp", (err, database) =>{
     database.close();
 });
 ```
+Note that the timestamp that a document was created is embedded in its ObjectId field. we can extract this by calling the getTimestamp() method on the ObjectId
+```javascript
+db.collection("Todos").insertOne({
+        text: "Learn Node.js",
+        completed: false,
+    }, (err, result) => {
+        if(err){
+            return console.log("Unable to todo document", err);
+        }
+        console.log((result.ops[0]._id.getTimeStamp());
+    });
+```
+#### ES6 Destructuring
+The code below:
+```javascript
+const MongoClient = require("mongodb").MongoClient;
+```
+Is the same in ES6 as:
+```javascript
+const { MongoClient } = require("mongodb");
+```
+
+This is made possible by the ES6 destructuring conventions. If a variable has the same name as a field or property in an object, we can create that variable simply by matching it up in { } with the entire object.
+
+We can even get multiple variables out of an object with this shorthand eg
+```javascript
+const { MongoClient, ObjectID } = require("mongodb");
+```
+...which automatically gives us MongoClient and ObjectID
+We can then go on to use these properties as usual:
+```javascript
+let obj = new ObjectID();
+console.log(obj.getTimestamp());
+```
