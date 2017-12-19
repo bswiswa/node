@@ -3,9 +3,14 @@ const request = require("supertest");
 
 const { app } = require("./../server");
 const { Todo } = require("./../models/todo");
+const { ObjectID } = require("mongodb");
 
 
-const todos = [{ text: "Test todo 1"}, { text: "Test todo 2"}];
+const todos = [
+    { _id: new ObjectID(), text: "Test todo 1"}, 
+    { _id: new ObjectID(), text: "Test todo 2"}
+    ];
+
 //a testing lifecycle method. Allows us to run some code before we run each test case
 beforeEach((done) => {
     Todo.remove({})
@@ -64,4 +69,37 @@ describe("GET /todos", ()=> {
         })
         .end(done);
    });
+});
+
+describe("GET /todos/:id", () => {
+    
+    it("should return a todo", (done) => {
+        request(app)
+            .get(`/todos/${todos[0]._id.toHexString()}`)
+            .expect(200)
+            .expect((response) => { expect(response.body.text).toBe(todos[0].text);
+            })
+            .end(done);
+    });
+    
+   it("should return 404 for an invalid ID", (done)=>{
+      request(app)
+       .get(`/todos/123`)
+       .expect(404)
+       .expect(response=>{
+          expect(response.body).toEqual({});
+        })
+        .end(done);
+   });
+    
+    it("should return 404 for a valid, non-existent ID", (done)=>{
+        let id = new ObjectID().toHexString();
+       request(app)
+        .get(`/todos/${id}`)
+        .expect(404)
+        .expect((response)=> {
+           expect(response.body).toEqual({});
+        })
+        .end(done);
+    });
 });
