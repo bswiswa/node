@@ -1,3 +1,4 @@
+require("./config/config.js");
 const _ = require("lodash");
 const express = require("express");
 const bodyParser = require("body-parser");
@@ -10,7 +11,7 @@ let { User } = require("./models/user");
 
 let app = express();
 //if not deployed use 3000
-const port = process.env.PORT || 3000;
+const port = process.env.PORT;
 
 //bodyParser takes JSON and converts it into an object and attaches it to the body of the request
 app.use(bodyParser.json());

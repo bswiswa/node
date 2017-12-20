@@ -1425,3 +1425,5 @@ We use Mongoose as an ORM which helps us avoid re-writiing boilerplate code
 ```
 npm i mongoose --save
 ```
+
+`process.env.NODE_ENV` this environment is set to "production" by default. We can also have a "development" and a "test" environment which will help us separate test code from production
