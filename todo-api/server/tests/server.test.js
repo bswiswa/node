@@ -8,7 +8,7 @@ const { ObjectID } = require("mongodb");
 
 const todos = [
     { _id: new ObjectID(), text: "Test todo 1"}, 
-    { _id: new ObjectID(), text: "Test todo 2"}
+    { _id: new ObjectID(), text: "Test todo 2", completed: true, completedAt: 333 }
     ];
 
 //a testing lifecycle method. Allows us to run some code before we run each test case
@@ -155,5 +155,50 @@ describe("DELETE /todos/:id", () => {
                 done();
             }).catch(e => done(e));
         });
+    });
+});
+
+describe("PATCH /todos/:id", () => {
+    it("should update the todo", (done)=>{
+       let idHex = todos[0]._id.toHexString();
+        let update = { text: "some update", completed: true };
+        request(app)
+            .patch(`/todos/${idHex}`)
+            .send(update)
+            .expect(200)
+            .expect(response => {
+            expect(response.body.todo).toInclude(update);
+            expect(response.body.todo.completedAt).toBeA("number");
+            })
+            .end((err, response) => {
+               if(err) return done(err);
+                Todo.findById(idHex).then(todo => {
+                    expect(todo).toInclude(update);
+                    done();
+                }).catch(e => done(e));
+            });
+    });
+    
+    it("should clear completedAt when todo is not completed", (done)=>{
+        let id = todos[1]._id.toHexString();
+        let update = { completed: false };
+        request(app)
+            .patch(`/todos/${id}`)
+            .send(update)
+            .expect(200)
+            .expect(response => {
+                expect(response.body.todo).toInclude(update);
+                expect(response.body.todo.completedAt).toNotExist();
+            })
+            .end((err, response) => {
+            if(err) return done(err);
+            Todo.findById(id).then(todo => {
+                expect(todo.completed).toBe(false);
+                expect(todo.completedAt).toNotExist();
+                done();
+            }).catch(e => done(e));
+        });
+        
+        
     });
 });

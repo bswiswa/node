@@ -66,7 +66,6 @@ app.patch("/todos/:id", (request, response) => {
     //setting completed and updating completedAt
     if(_.isBoolean(body.completed) && body.completed){
         body.completedAt = new Date().getTime();
-        console.log(body);
     }else{
         body.completed = false;
         body.completedAt = null;
@@ -74,7 +73,7 @@ app.patch("/todos/:id", (request, response) => {
     
     Todo.findByIdAndUpdate(id, { $set: body}, { new: true }).then(todo =>{
             if(!todo) return response.status(404).send();
-            response.status(200).send(todo);   
+            response.status(200).send({ todo });   
     }).catch(e => response.status(404).send()); 
 });
 
