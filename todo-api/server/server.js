@@ -7,6 +7,8 @@ let { User } = require("./models/user");
 const { ObjectID } = require("mongodb");
 
 let app = express();
+//if not deployed use 3000
+const port = process.env.PORT || 3000;
 
 //bodyParser takes JSON and converts it into an object and attaches it to the body of the request
 app.use(bodyParser.json());
@@ -40,8 +42,8 @@ app.get("/todos/:id", (request, response)=> {
     //leave out sending error back because it may contain sensitive information
 });
 
-app.listen(3000, () => {
-    console.log("App started on port 3000");
+app.listen(port, () => {
+    console.log(`App started on port ${port}`);
 });
 
 module.exports = { app };
