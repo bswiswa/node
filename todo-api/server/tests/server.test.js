@@ -103,3 +103,56 @@ describe("GET /todos/:id", () => {
         .end(done);
     });
 });
+
+describe("DELETE /todos/:id", () => {
+    
+    it("should delete a valid, existing id and return todo", (done) => {
+        request(app)
+        .delete(`/todos/${todos[0]._id.toHexString()}`)
+        .expect(200)
+        .expect((response) => {
+            expect(response.body.text).toEqual(todos[0].text);
+        })
+        .end((err, response) => {
+           if(err) return done(err);
+            Todo.find().count().then(count => {
+                expect(count).toBe(1);
+                done();
+            }).catch(e => done(e));
+        });
+        
+    });
+    
+    it("should return 404 for an invalid id", (done)=>{
+       request(app)
+        .delete("/todos/123a")
+        .expect(404)
+        .expect((response) => {
+           expect(response.body).toEqual({});
+        })
+        .end((err, response) => {
+           if(err) return done(err);
+           Todo.find().count().then( count => {
+               expect(count).toBe(2);
+               done();
+           }).catch(e => done(e));
+       });
+    });
+    
+    it("should return 404 for a valid but non-existent id", (done) => {
+        let id = new ObjectID();
+        request(app)
+            .delete(`/todos/${id}`)
+            .expect(404)
+            .expect(response => {
+                expect(response.body).toEqual({});
+            })
+            .end((err, response) => {
+            if(err) return done(err);
+            Todo.find().count().then( count => {
+                expect(count).toBe(2);
+                done();
+            }).catch(e => done(e));
+        });
+    });
+});
