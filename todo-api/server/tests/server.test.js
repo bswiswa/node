@@ -107,16 +107,17 @@ describe("GET /todos/:id", () => {
 describe("DELETE /todos/:id", () => {
     
     it("should delete a valid, existing id and return todo", (done) => {
+        let idHex = todos[1]._id.toHexString();
         request(app)
-        .delete(`/todos/${todos[0]._id.toHexString()}`)
+        .delete(`/todos/${idHex}`)
         .expect(200)
         .expect((response) => {
-            expect(response.body.text).toEqual(todos[0].text);
+            expect(response.body.todo.text).toEqual(todos[1].text);
         })
         .end((err, response) => {
            if(err) return done(err);
-            Todo.find().count().then(count => {
-                expect(count).toBe(1);
+            Todo.findById(idHex).then(todo => {
+                expect(todo).toNotExist();
                 done();
             }).catch(e => done(e));
         });

@@ -1,10 +1,12 @@
-let express = require("express");
-let bodyParser = require("body-parser");
+const _ = require("lodash");
+const express = require("express");
+const bodyParser = require("body-parser");
+const { ObjectID } = require("mongodb");
 
 let { mongoose } = require("./db/mongoose");
 let { Todo } = require("./models/todo");
 let { User } = require("./models/user");
-const { ObjectID } = require("mongodb");
+
 
 let app = express();
 //if not deployed use 3000
@@ -49,8 +51,31 @@ app.delete("/todos/:id", (request, response) => {
     }
     Todo.findByIdAndRemove(id).then(todo => {
         if(!todo) return response.status(404).send();
-        response.send(todo);
+        response.send({ todo });
     }).catch(e => response.status(400).send());
+});
+
+//HTTP patch method is used to update a resource
+app.patch("/todos/:id", (request, response) => {
+    let id = request.params.id;
+    /* prevent user from editing other properties besides text and completed. lodash's pick method creates an object derived from another object but with only select fields specified in the array
+    */
+    let body = _.pick(request.body, ["text", "completed"]);
+    if(!ObjectID.isValid(id)) return response.status(404).send();
+    
+    //setting completed and updating completedAt
+    if(_.isBoolean(body.completed) && body.completed){
+        body.completedAt = new Date().getTime();
+        console.log(body);
+    }else{
+        body.completed = false;
+        body.completedAt = null;
+    }
+    
+    Todo.findByIdAndUpdate(id, { $set: body}, { new: true }).then(todo =>{
+            if(!todo) return response.status(404).send();
+            response.status(200).send(todo);   
+    }).catch(e => response.status(404).send()); 
 });
 
 app.listen(port, () => {

@@ -9,13 +9,14 @@
     "start": "node server/server.js"
   },
   "engines": {
-     "node": "6.2.2"
+    "node": "6.2.2"
   },
   "author": "bswiswa",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.15.2",
     "express": "^4.14.0",
+    "lodash": "^4.15.0",
     "mongodb": "^3.0.0-rc0",
     "mongoose": "^4.5.9"
   },
