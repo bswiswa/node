@@ -89,6 +89,7 @@ app.post("/users", (request, response) => {
     }).catch(e => response.status(400).send(e))
 });
 
+//GET /users/me
 app.get("/users/me", (request, response) => {
    let token = request.header("x-auth");
     User.findByToken(token).then(user => {
