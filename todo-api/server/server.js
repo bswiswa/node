@@ -89,6 +89,18 @@ app.post("/users", (request, response) => {
     }).catch(e => response.status(400).send(e))
 });
 
+app.get("/users/me", (request, response) => {
+   let token = request.header("x-auth");
+    User.findByToken(token).then(user => {
+        if(!user){
+            return Promise.reject();
+        }
+        response.send(user);
+    }).catch(e => {
+        response.status(401).send();
+    });
+});
+
 app.listen(port, () => {
     console.log(`App started on port ${port}`);
 });
