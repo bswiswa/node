@@ -4,20 +4,10 @@ const request = require("supertest");
 const { app } = require("./../server");
 const { Todo } = require("./../models/todo");
 const { ObjectID } = require("mongodb");
-
-
-const todos = [
-    { _id: new ObjectID(), text: "Test todo 1"}, 
-    { _id: new ObjectID(), text: "Test todo 2", completed: true, completedAt: 333 }
-    ];
+const { todos, populateTodos } = require("./seed/seed");
 
 //a testing lifecycle method. Allows us to run some code before we run each test case
-beforeEach((done) => {
-    Todo.remove({})
-        .then(() => Todo.insertMany(todos))
-        .then(()=> done())
-        .catch(e => console.log(e));
-});
+beforeEach(populateTodos);
            
 describe("POST /todos", ()=> {
    it("should create a new todo", (done) => {
