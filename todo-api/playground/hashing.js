@@ -1,26 +1,19 @@
-const { SHA256 } = require("crypto-js");
-let message = "I am user number 3";
-let hash = SHA256(message).toString();
-
-console.log(`Message: ${message}\nHash: ${hash}`);
+const jwt = require("jsonwebtoken");
 
 let data = {
     id: 4
 };
 
+/*
+jwt.sign takes the object and signs it -- creates the hash and returns the token value
 
-let token = {
-    data,
-    hash: SHA256(JSON.stringify(data) + "somesecret").toString()
-}
+jwt.verify takes the token and the secret and makes sure the data was not manipulated
+*/
 
-//token.data.id = 5;
-//token.hash = SHA256(JSON.stringify(data)).toString();
+let token = jwt.sign(data, "123abc");
+//token is sent back to user when they sign up or login.
+//token is stored inside the tokens array
+console.log(token);
 
-let resultHash = SHA256(JSON.stringify(token.data) + "somesecret").toString();
-
-if(resultHash === token.hash){
-    console.log("Data was not changed");
-}else{
-    console.log("Data was changed. Don't trust")
-}
+let decoded = jwt.verify(token, "123abc");
+console.log("Decoded", decoded);
