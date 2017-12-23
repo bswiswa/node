@@ -95,6 +95,7 @@ app.get("/users/me", authenticate, (request, response) => {
    response.send(request.user);
 });
 
+//POST /users/login
 app.post("/users/login", (request, response) => {
    let body = _.pick(request.body, ["email", "password"]);
     User.findByCredentials(body.email, body.password).then(user => {
