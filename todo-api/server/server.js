@@ -19,13 +19,13 @@ app.use(bodyParser.json());
 
 //configuring routes
 //CRUD - create, read, update, delete
-app.post("/todos", (request, response) => {
-    let todo = new Todo({ text: request.body.text });
+app.post("/todos", authenticate, (request, response) => {
+    let todo = new Todo({ text: request.body.text, _creator: request.user._id });
     todo.save().then((result)=>{ response.send(result)}, (err)=> { response.status(400).send(err)});
 });
 
-app.get("/todos", (request, response) => {
-   Todo.find().then((todos)=>{
+app.get("/todos", authenticate, (request, response) => {
+   Todo.find({ _creator: request.user._id }).then((todos)=>{
        //better to send an object as we can use that object more flexibly later
        response.send({ todos });
    }, (err)=> { 
@@ -34,31 +34,31 @@ app.get("/todos", (request, response) => {
 });
 
 //URL parameter :name.  Creates a name variable on the request.params object
-app.get("/todos/:id", (request, response)=> {
+app.get("/todos/:id", authenticate, (request, response)=> {
     let id = request.params.id;
     if(!ObjectID.isValid(id)){
       return response.status(404).send();  
     }
-    Todo.findById(id).then(todo => {
+    Todo.findOne({_creator: request.user._id, _id: new ObjectID(id)}).then(todo => {
         if(!todo) return response.status(404).send();
         response.send(todo);
     }).catch(e => response.status(400).send());
     //leave out sending error back because it may contain sensitive information
 });
 
-app.delete("/todos/:id", (request, response) => {
+app.delete("/todos/:id", authenticate,(request, response) => {
     let id = request.params.id;
     if(!ObjectID.isValid(id)){
      return response.status(404).send();   
     }
-    Todo.findByIdAndRemove(id).then(todo => {
+    Todo.findOneAndRemove({ _creator: request.user._id, _id: new ObjectID(id)}).then(todo => {
         if(!todo) return response.status(404).send();
         response.send({ todo });
     }).catch(e => response.status(400).send());
 });
 
 //HTTP patch method is used to update a resource
-app.patch("/todos/:id", (request, response) => {
+app.patch("/todos/:id", authenticate, (request, response) => {
     let id = request.params.id;
     /* prevent user from editing other properties besides text and completed. lodash's pick method creates an object derived from another object but with only select fields specified in the array
     */
@@ -73,7 +73,7 @@ app.patch("/todos/:id", (request, response) => {
         body.completedAt = null;
     }
     
-    Todo.findByIdAndUpdate(id, { $set: body}, { new: true }).then(todo =>{
+    Todo.findOneAndUpdate({ _creator: request.user._id, _id: id }, { $set: body}, { new: true }).then(todo =>{
             if(!todo) return response.status(404).send();
             response.status(200).send({ todo });   
     }).catch(e => response.status(404).send()); 

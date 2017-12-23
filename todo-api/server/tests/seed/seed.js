@@ -17,12 +17,16 @@ const users = [{
               {
     _id: userTwoId,
     email: "ruva@example.com",
-    password: "userTwoPass"
+    password: "userTwoPass",
+    tokens: [{
+        access: "auth",
+        token: jwt.sign({ _id: userTwoId, access: "auth" }, "abc123").toString()
+    }]
               }];
  
 const todos = [
-    { _id: new ObjectID(), text: "Test todo 1"}, 
-    { _id: new ObjectID(), text: "Test todo 2", completed: true, completedAt: 333 }
+    { _id: new ObjectID(), text: "Test todo 1", _creator: userOneId}, 
+    { _id: new ObjectID(), text: "Test todo 2", completed: true, completedAt: 333, _creator: userTwoId }
     ];
 
 //a testing lifecycle method. Allows us to run some code before we run each test case
