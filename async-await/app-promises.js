@@ -51,11 +51,30 @@ const getStatus = (userId) => {
          return `${user.name} has a ${average}% in the class.`;
         //return our string
     });
-}
+};
+/*
+in async functions we always get a promise back, returning something is the same as resolving it. Throwing an error is equivalent to rejecting.
 
-getUser(1).then((user) => console.log(user) )
-            .catch(e => console.log(e));
+There is no top-level await. await has to be used inside of an async function
+*/
+const getStatusAlt = async (userId) => {
+    const user = await getUser(userId);
+    const grades = await getGrades(user.schoolId);
+    let average = 0;
+    
+    if(grades.length > 0){
+        average = grades.map(grade => grade.grade).reduce((a,b) => a + b) / grades.length;
+        }
+    return `${user.name} has a ${average}% in the class.`;
+};
+getStatusAlt(1).then(status => console.log(status)).catch(e => console.log(e));
 
-getGrades(101).then(grades => console.log("grades", grades)).catch(e => console.log(e));
 
-getStatus(2).then(status => console.log(status)).catch(e => console.log(e));
+//console.log(getStatusAlt(1));
+//console.log(getStatusAlt(1).then(name => console.log(name)).catch(e => console.log("error", e)));
+//getUser(1).then((user) => console.log(user) )
+//            .catch(e => console.log(e));
+//
+//getGrades(101).then(grades => console.log("grades", grades)).catch(e => console.log(e));
+//
+//getStatus(2).then(status => console.log(status)).catch(e => console.log(e));
